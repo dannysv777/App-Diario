@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface LoadingScreenProps {
@@ -18,6 +18,11 @@ type WelcomeStep =
   | "heart"
   | "thanks"
   | "life"
+  | "prepared"
+  | "not-planned"
+  | "time"
+  | "birthday-effort"
+  | "flowers-inspired"
   | "garden"
   | "enter";
 
@@ -48,6 +53,13 @@ const stepOrder: WelcomeStep[] = [
   "birthday",
   "admire",
   "heart",
+  "thanks",
+  "life",
+  "prepared",
+  "not-planned",
+  "time",
+  "birthday-effort",
+  "flowers-inspired",
   "garden",
   "enter",
 ];
@@ -57,7 +69,7 @@ const stepContent: Record<WelcomeStep, StepContent> = {
     lines: ["Prepar\u00e9 algo para ti..."],
   },
   "prelude-two": {
-    lines: ["Hay un peque\u00f1o lugar que quiero mostrarte..."],
+    lines: ["Hay un peque\u00f1o detalle que quiero mostrarte...", "Pero antes..."],
   },
   hello: {
     kicker: "Bienvenida",
@@ -70,35 +82,51 @@ const stepContent: Record<WelcomeStep, StepContent> = {
     lines: [
       "Quer\u00eda darte algo hecho con cari\u00f1o.",
       "Un peque\u00f1o detalle para que lo puedas ver cuando quieras.",
+      "As\u00ed que...",
     ],
   },
   birthday: {
     lines: [
       "Feliz cumplea\u00f1os, mi amor \u{1f382}\u2764\ufe0f",
-      "Eres una chica incre\u00edble, y quiero que nunca lo olvides.",
+      "Eres una persona incre\u00edble y especial para m\u00ed, quiero que nunca lo olvides.",
     ],
   },
   admire: {
     lines: [
-      "Admiro tu forma de ser y lo especial que eres.",
+      "Eres alguien que aprecio y admiro mucho.",
       "Quiero que hoy recuerdes lo valiosa y maravillosa que eres.",
     ],
   },
   heart: {
-    kicker: "Un detalle peque\u00f1o",
-    lines: ["Toca este coraz\u00f3n \u2764\ufe0f"],
+    kicker: "Un detalle peque\u00f1o? jaja",
+    lines: ["Continue jeje \u2764\ufe0f"],
   },
   thanks: {
-    lines: ["Gracias por existir."],
+    lines: ["Gracias por todo lo bonito."],
   },
   life: {
     lines: ["Estoy muy feliz de tenerte en mi vida."],
+  },
+  prepared: {
+    lines: ["As\u00ed que hab\u00eda preparado algo un poco m\u00e1s trabajado."],
+  },
+  "not-planned": {
+    lines: ["Pero no me sali\u00f3 como pensaba..."],
+  },
+  time: {
+    lines: ["Por el tiempo..."],
+  },
+  "birthday-effort": {
+    lines: ["Hice algo para expresarme hoy en tu cumplea\u00f1os."],
+  },
+  "flowers-inspired": {
+    lines: ["Te gustan las flores, as\u00ed que me bas\u00e9 en eso jaja."],
   },
   garden: {
     lines: ["Ahora quiero mostrarte un peque\u00f1o detalle que prepar\u00e9 para ti..."],
   },
   enter: {
-    kicker: "Un jard\u00ednnnnn jaja",
+    kicker: "Un jard\u00ednn jajajj",
     lines: ["Bienvenida!! \u2764\ufe0f"],
   },
 };
@@ -158,28 +186,23 @@ function getNextStep(current: WelcomeStep): WelcomeStep {
 
 export function LoadingScreen({ onComplete, visible }: LoadingScreenProps) {
   const [step, setStep] = useState<WelcomeStep>("prelude-one");
+  const lastStepAt = useRef(0);
   const content = stepContent[step];
 
-  useEffect(() => {
-    if (step === "thanks") {
-      const timer = window.setTimeout(() => setStep("life"), 1300);
-      return () => window.clearTimeout(timer);
-    }
-
-    if (step === "life") {
-      const timer = window.setTimeout(() => setStep("garden"), 1700);
-      return () => window.clearTimeout(timer);
-    }
-  }, [step]);
-
   const handleScreenTap = () => {
-    if (step === "heart" || step === "thanks" || step === "life" || step === "enter") return;
+    if (step === "heart" || step === "enter") return;
+    const now = performance.now();
+    if (now - lastStepAt.current < 720) return;
+    lastStepAt.current = now;
 
     setStep(getNextStep(step));
   };
 
   const handleHeart = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+    const now = performance.now();
+    if (now - lastStepAt.current < 720) return;
+    lastStepAt.current = now;
     setStep("thanks");
   };
 
@@ -291,7 +314,7 @@ export function LoadingScreen({ onComplete, visible }: LoadingScreenProps) {
 
       {flowerClusters.map((cluster, index) => (
         <DecorativeFlowers
-          key={`${step}-${cluster.side}-${index}`}
+          key={`${cluster.side}-${index}`}
           clusterIndex={index}
           {...cluster}
         />

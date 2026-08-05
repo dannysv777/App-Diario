@@ -9,14 +9,15 @@ import {
   Text,
   TextStyle,
 } from "pixi.js";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { DiaryOverlay } from "@/components/ui/DiaryOverlay";
 import { LetterOverlay } from "@/components/ui/LetterOverlay";
 import { MessageOverlay } from "@/components/ui/MessageOverlay";
 import { Particles } from "@/components/garden/Particles";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { ResourceLoadingScreen } from "@/components/ui/ResourceLoadingScreen";
 
-type GardenPhase = "loading" | "waiting" | "growing" | "bloomed" | "letter";
+type GardenPhase = "preloading" | "welcome" | "revealing" | "growing" | "bloomed" | "letter";
 
 interface BloomParts {
   root: Container;
@@ -181,15 +182,26 @@ const colors = {
 
 export function GardenScene() {
   const canvasRef = useRef<HTMLDivElement>(null);
-  const phaseRef = useRef<GardenPhase>("loading");
+  const phaseRef = useRef<GardenPhase>("preloading");
   const tickerRef = useRef<(() => void) | null>(null);
-  const [phase, setPhase] = useState<GardenPhase>("loading");
+  const [phase, setPhase] = useState<GardenPhase>("preloading");
   const [showParticles, setShowParticles] = useState(false);
   const [diaryOpen, setDiaryOpen] = useState(false);
   const [activeMessage, setActiveMessage] = useState<FlowerMessage | null>(null);
 
   useEffect(() => {
     phaseRef.current = phase;
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== "revealing") return;
+
+    const timer = window.setTimeout(() => {
+      setShowParticles(true);
+      setPhase("growing");
+    }, 820);
+
+    return () => window.clearTimeout(timer);
   }, [phase]);
 
   useEffect(() => {
@@ -241,17 +253,19 @@ export function GardenScene() {
         houseHotspot.on("pointertap", () => setDiaryOpen(true));
 
         drawInteractiveFlowers(stage, w, h, groundY, (message) => {
-          if (phaseRef.current !== "loading") setActiveMessage(message);
+          if (phaseRef.current !== "preloading" && phaseRef.current !== "welcome") {
+            setActiveMessage(message);
+          }
         });
 
         const parts = drawSeedAndFlower(stage, w * 0.5, groundY + h * 0.02, min);
-        const prompt = drawPrompt(stage, w / 2, h * 0.9, "toca la semilla");
+        const prompt = drawPrompt(stage, w / 2, h * 0.9, "");
 
         parts.seed.eventMode = "static";
         parts.seed.cursor = "pointer";
         parts.seed.hitArea = new Rectangle(-76, -98, 152, 132);
         parts.seed.on("pointertap", () => {
-          if (phaseRef.current !== "waiting") return;
+          if (phaseRef.current !== "revealing") return;
           growElapsed = 0;
           prompt.text = "";
           setPhase("growing");
@@ -288,6 +302,7 @@ export function GardenScene() {
 
           if (phaseRef.current !== "growing") return;
 
+          prompt.text = "";
           growElapsed += app.ticker.deltaMS;
           animateBloom(parts, growElapsed);
 
@@ -337,12 +352,16 @@ export function GardenScene() {
 
   return (
     <>
-      {phase === "loading" && (
-        <LoadingScreen visible onComplete={() => setPhase("waiting")} />
-      )}
       <div ref={canvasRef} className="fixed inset-0 h-full w-full" />
       {showParticles && <Particles />}
       <AnimatePresence>
+        {phase === "preloading" && (
+          <ResourceLoadingScreen onComplete={() => setPhase("welcome")} />
+        )}
+        {phase === "welcome" && (
+          <LoadingScreen visible onComplete={() => setPhase("revealing")} />
+        )}
+        {phase === "revealing" && <GardenReveal />}
         {phase === "letter" && (
           <LetterOverlay onClose={() => setPhase("bloomed")} />
         )}
@@ -356,6 +375,34 @@ export function GardenScene() {
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+function GardenReveal() {
+  return (
+    <motion.div
+      className="garden-reveal fixed inset-0 z-[110] flex items-center justify-center overflow-hidden"
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ delay: 0.55, duration: 0.9, ease: "easeInOut" }}
+      aria-hidden="true"
+    >
+      <motion.div
+        className="garden-reveal-light absolute"
+        initial={{ scale: 0.15, opacity: 0.95 }}
+        animate={{ scale: 3.8, opacity: 0 }}
+        transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] }}
+      />
+      <motion.p
+        className="garden-reveal-text relative z-10 text-center text-[clamp(1.6rem,7vw,3.8rem)] font-black text-[#fff7d1]"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: [0, 1, 1, 0], y: [16, 0, 0, -10] }}
+        transition={{ duration: 1.2, ease: "easeInOut" }}
+      >
+        Mira...
+      </motion.p>
+    </motion.div>
   );
 }
 
@@ -805,18 +852,8 @@ function drawSeedAndFlower(parent: Container, x: number, y: number, sizeBase: nu
   flower.scale.set(0);
   root.addChild(flower);
 
-  for (let i = 0; i < 10; i++) {
-    const petal = new Graphics();
-    petal.ellipse(0, -44, 23, 48).fill({
-      color: i % 2 === 0 ? 0xf25c83 : 0xff9fb1,
-    });
-    petal.rotation = (Math.PI * 2 * i) / 10;
-    flower.addChild(petal);
-  }
-
   const flowerCore = new Graphics();
-  flowerCore.circle(0, 0, 27).fill({ color: 0xffc43d });
-  flowerCore.circle(-7, -7, 7).fill({ color: 0xffe58a, alpha: 0.72 });
+  drawMainTulip(flower, flowerCore);
   flower.addChild(flowerCore);
 
   const seed = new Container();
@@ -836,6 +873,63 @@ function drawSeedAndFlower(parent: Container, x: number, y: number, sizeBase: nu
   seed.addChild(shine);
 
   return { root, seed, leftShell, rightShell, stem, leafLeft, leafRight, flower, flowerCore, glow };
+}
+
+function drawMainTulip(parent: Container, shine: Graphics) {
+  const shadow = new Graphics();
+  shadow.ellipse(0, 18, 58, 15).fill({ color: 0x35155f, alpha: 0.24 });
+  parent.addChild(shadow);
+
+  const backPetals = new Graphics();
+  backPetals.moveTo(-52, 6);
+  backPetals.bezierCurveTo(-70, -46, -39, -90, -7, -48);
+  backPetals.bezierCurveTo(-1, -18, -20, 8, -52, 6);
+  backPetals.fill({ color: 0x7b45d9 });
+  backPetals.stroke({ color: 0x4d2691, width: 5, alpha: 0.82 });
+
+  backPetals.moveTo(52, 6);
+  backPetals.bezierCurveTo(70, -46, 39, -90, 7, -48);
+  backPetals.bezierCurveTo(1, -18, 20, 8, 52, 6);
+  backPetals.fill({ color: 0x8d58ee });
+  backPetals.stroke({ color: 0x4d2691, width: 5, alpha: 0.82 });
+  parent.addChild(backPetals);
+
+  const cup = new Graphics();
+  cup.moveTo(-42, -2);
+  cup.bezierCurveTo(-48, -42, -24, -88, 0, -42);
+  cup.bezierCurveTo(24, -88, 48, -42, 42, -2);
+  cup.bezierCurveTo(31, 34, -31, 34, -42, -2);
+  cup.fill({ color: 0x9b63ff });
+  cup.stroke({ color: 0x53299d, width: 6, alpha: 0.9 });
+  parent.addChild(cup);
+
+  const centerPetal = new Graphics();
+  centerPetal.moveTo(0, 24);
+  centerPetal.bezierCurveTo(-20, -8, -17, -61, 0, -96);
+  centerPetal.bezierCurveTo(19, -61, 20, -8, 0, 24);
+  centerPetal.fill({ color: 0xd8c3ff });
+  centerPetal.stroke({ color: 0x6432b5, width: 5, alpha: 0.72 });
+  parent.addChild(centerPetal);
+
+  const frontPetals = new Graphics();
+  frontPetals.moveTo(-36, 14);
+  frontPetals.bezierCurveTo(-36, -17, -23, -51, -5, -31);
+  frontPetals.bezierCurveTo(-4, -4, -12, 12, -36, 14);
+  frontPetals.fill({ color: 0x7d48d8, alpha: 0.94 });
+
+  frontPetals.moveTo(36, 14);
+  frontPetals.bezierCurveTo(36, -17, 23, -51, 5, -31);
+  frontPetals.bezierCurveTo(4, -4, 12, 12, 36, 14);
+  frontPetals.fill({ color: 0x8654e8, alpha: 0.94 });
+  parent.addChild(frontPetals);
+
+  shine.moveTo(-18, 4);
+  shine.bezierCurveTo(-24, -24, -15, -56, -2, -72);
+  shine.stroke({ color: 0xffffff, width: 5, alpha: 0.22, cap: "round" });
+  shine.moveTo(17, 2);
+  shine.bezierCurveTo(25, -24, 16, -52, 6, -66);
+  shine.stroke({ color: 0xffffff, width: 4, alpha: 0.16, cap: "round" });
+  shine.ellipse(-9, -40, 8, 22).fill({ color: 0xf0e4ff, alpha: 0.16 });
 }
 
 function animateBloom(parts: BloomParts, elapsed: number) {
@@ -859,8 +953,8 @@ function animateBloom(parts: BloomParts, elapsed: number) {
   const flowerGrow = easeOutBack(clamp((elapsed - 2050) / 1050));
   parts.flower.alpha = clamp((elapsed - 1900) / 600);
   parts.flower.scale.set(flowerGrow);
-  parts.flower.rotation = (1 - clamp((elapsed - 2050) / 1050)) * -0.2;
-  parts.flowerCore.scale.set(1 + Math.sin(elapsed * 0.012) * 0.025);
+  parts.flower.rotation = (1 - clamp((elapsed - 2050) / 1050)) * -0.16;
+  parts.flowerCore.alpha = 0.75 + Math.sin(elapsed * 0.008) * 0.18;
 }
 
 function drawSeedHalf(g: Graphics, direction: -1 | 1) {
