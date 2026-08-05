@@ -184,7 +184,6 @@ export function GardenScene() {
   const phaseRef = useRef<GardenPhase>("loading");
   const tickerRef = useRef<(() => void) | null>(null);
   const [phase, setPhase] = useState<GardenPhase>("loading");
-  const [loadProgress, setLoadProgress] = useState(0);
   const [showParticles, setShowParticles] = useState(false);
   const [diaryOpen, setDiaryOpen] = useState(false);
   const [activeMessage, setActiveMessage] = useState<FlowerMessage | null>(null);
@@ -313,20 +312,8 @@ export function GardenScene() {
       window.addEventListener("resize", resize);
       cleanupResize = () => window.removeEventListener("resize", resize);
 
-      const loadingTimer = window.setInterval(() => {
-        setLoadProgress((current) => {
-          const next = Math.min(current + 16, 100);
-          if (next >= 100) {
-            window.clearInterval(loadingTimer);
-            window.setTimeout(() => setPhase("waiting"), 250);
-          }
-          return next;
-        });
-      }, 75);
-
       cleanupResize = () => {
         window.removeEventListener("resize", resize);
-        window.clearInterval(loadingTimer);
       };
     };
 
@@ -350,7 +337,9 @@ export function GardenScene() {
 
   return (
     <>
-      {phase === "loading" && <LoadingScreen progress={loadProgress} visible />}
+      {phase === "loading" && (
+        <LoadingScreen visible onComplete={() => setPhase("waiting")} />
+      )}
       <div ref={canvasRef} className="fixed inset-0 h-full w-full" />
       {showParticles && <Particles />}
       <AnimatePresence>

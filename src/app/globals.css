@@ -116,6 +116,594 @@ textarea {
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
 }
 
+.welcome-screen {
+  background:
+    radial-gradient(circle at 24% 15%, rgba(255, 223, 137, 0.18), transparent 16%),
+    radial-gradient(circle at 50% 52%, rgba(255, 208, 88, 0.055), transparent 21%),
+    radial-gradient(circle at 16% 82%, rgba(242, 205, 68, 0.2), transparent 18%),
+    radial-gradient(circle at 86% 78%, rgba(255, 219, 90, 0.18), transparent 20%),
+    linear-gradient(180deg, #061316 0%, #0a1717 48%, #07100d 100%);
+}
+
+.welcome-vignette {
+  background:
+    radial-gradient(circle at 50% 48%, transparent 0 31%, rgba(0, 0, 0, 0.2) 62%, rgba(0, 0, 0, 0.78) 100%),
+    radial-gradient(circle at 50% 86%, rgba(255, 210, 93, 0.08), transparent 36%),
+    linear-gradient(180deg, rgba(255, 222, 140, 0.06), transparent 45%, rgba(0, 0, 0, 0.2));
+}
+
+.welcome-moon {
+  left: clamp(5.5rem, 18vw, 18rem);
+  top: clamp(2.4rem, 7dvh, 5.6rem);
+  z-index: 1;
+  width: clamp(4.7rem, 9.5vw, 7.8rem);
+  height: auto;
+  overflow: visible;
+  filter:
+    drop-shadow(0 0 22px rgba(255, 235, 170, 0.86))
+    drop-shadow(0 0 76px rgba(255, 209, 93, 0.42))
+    drop-shadow(0 0 132px rgba(255, 212, 102, 0.2));
+  opacity: 0.98;
+  animation: welcome-moon-breathe 5.8s ease-in-out infinite;
+}
+
+.welcome-foreground {
+  z-index: 3;
+  height: 24dvh;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 6% 118%, rgba(5, 23, 13, 0.86) 0 14%, transparent 32%),
+    radial-gradient(ellipse at 94% 116%, rgba(5, 23, 13, 0.82) 0 16%, transparent 34%),
+    radial-gradient(ellipse at 50% 130%, rgba(3, 14, 9, 0.58) 0 28%, transparent 62%);
+  filter: blur(4px);
+  opacity: 0.62;
+}
+
+.welcome-firefly {
+  z-index: 2;
+  width: 6px;
+  height: 6px;
+  background: #ffe58a;
+  box-shadow:
+    0 0 15px rgba(255, 229, 138, 0.95),
+    0 0 34px rgba(255, 195, 83, 0.44);
+}
+
+.welcome-magic-dust {
+  z-index: 2;
+  width: 4px;
+  height: 4px;
+  background: #ffe89b;
+  box-shadow: 0 0 15px rgba(255, 226, 133, 0.84);
+}
+
+.welcome-copy {
+  text-shadow: 0 5px 28px rgba(0, 0, 0, 0.72);
+  transform: translateY(-2dvh);
+}
+
+.welcome-text-halo {
+  left: 50%;
+  top: 50%;
+  width: min(92vw, 880px);
+  height: min(50dvh, 420px);
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at center, rgba(255, 221, 132, 0.18) 0%, rgba(255, 225, 151, 0.08) 38%, transparent 74%);
+  filter: blur(22px);
+  opacity: 0.72;
+  transform: translate(-50%, -50%);
+  animation: welcome-halo-pulse 4.6s ease-in-out infinite;
+}
+
+.welcome-line {
+  font-family: "Ink Free", "Segoe Print", "Comic Sans MS", "Trebuchet MS", cursive;
+  overflow-wrap: anywhere;
+  animation: welcome-text-glow 4.8s ease-in-out infinite;
+  will-change: text-shadow;
+}
+
+.welcome-next {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.welcome-heart {
+  border: 1px solid rgba(255, 234, 155, 0.42);
+}
+
+.welcome-flower-cluster {
+  z-index: 1;
+  width: min(32vw, 320px);
+  height: auto;
+  overflow: visible;
+  filter:
+    drop-shadow(0 0 14px rgba(255, 215, 83, 0.28))
+    drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
+}
+
+.welcome-flower-cluster-small {
+  width: min(22vw, 210px);
+}
+
+.welcome-svg-grow {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: welcome-svg-grow 0.78s ease-out both;
+}
+
+.welcome-svg-stem {
+  fill: none;
+  stroke: #2f7a34;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.welcome-svg-leaf {
+  fill: #65b246;
+  stroke: #2c7330;
+  stroke-width: 7;
+  stroke-linejoin: round;
+}
+
+.welcome-svg-flower {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.welcome-screen main {
+  pointer-events: none;
+}
+
+.welcome-screen button {
+  pointer-events: auto;
+}
+
+.welcome-flower {
+  display: block;
+  width: 42px;
+  height: 132px;
+  --flower-base: #ffd141;
+  --flower-light: #fff6a8;
+  --flower-dark: #e7a816;
+  transform-origin: bottom center;
+}
+
+.welcome-stem {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  width: 4px;
+  height: 98px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #6bd88a, #185e3a);
+  box-shadow: 0 0 12px rgba(61, 189, 100, 0.32);
+  transform-origin: bottom center;
+  animation: welcome-stem-grow 0.72s ease-out both;
+}
+
+.welcome-leaf {
+  position: absolute;
+  bottom: 38px;
+  --leaf-flip: 1;
+  --leaf-rotate: -33deg;
+  width: 28px;
+  height: 14px;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(135deg, #78e59d, #1f7045);
+  opacity: 0;
+  transform: rotate(var(--leaf-rotate)) scaleX(var(--leaf-flip)) scale(0.25);
+  animation: welcome-leaf-grow 0.48s 0.38s ease-out forwards;
+}
+
+.welcome-leaf-left {
+  left: -2px;
+  --leaf-rotate: -33deg;
+}
+
+.welcome-leaf-right {
+  right: -4px;
+  --leaf-flip: -1;
+  --leaf-rotate: 35deg;
+}
+
+.welcome-bloom {
+  position: absolute;
+  left: 4px;
+  top: 14px;
+  display: block;
+  width: 34px;
+  height: 34px;
+  transform-origin: 50% 82%;
+  animation:
+    welcome-flower-pop 0.58s 0.55s ease-out both,
+    welcome-bloom-breathe 3.6s 1.12s ease-in-out infinite;
+}
+
+.welcome-bloom span {
+  position: absolute;
+  left: 9px;
+  top: 3px;
+  width: 16px;
+  height: 24px;
+  border-radius: 50% 50% 45% 45%;
+  background: linear-gradient(180deg, var(--flower-light), var(--flower-base) 62%, var(--flower-dark));
+  box-shadow: 0 0 18px rgba(255, 214, 76, 0.45);
+  transform-origin: 50% 86%;
+}
+
+.welcome-bloom span:nth-child(1) {
+  transform: rotate(0deg) translateY(-7px);
+}
+
+.welcome-bloom span:nth-child(2) {
+  transform: rotate(72deg) translateY(-7px);
+}
+
+.welcome-bloom span:nth-child(3) {
+  transform: rotate(144deg) translateY(-7px);
+}
+
+.welcome-bloom span:nth-child(4) {
+  transform: rotate(216deg) translateY(-7px);
+}
+
+.welcome-bloom span:nth-child(5) {
+  transform: rotate(288deg) translateY(-7px);
+}
+
+.welcome-bloom i {
+  position: absolute;
+  left: 11px;
+  top: 11px;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #fff1a8, #c97816 70%);
+  box-shadow: 0 0 10px rgba(255, 224, 87, 0.65);
+}
+
+.welcome-tulip .welcome-stem {
+  height: 108px;
+}
+
+.welcome-tulip .welcome-leaf {
+  bottom: 24px;
+  width: 34px;
+  height: 74px;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(135deg, #8df0aa 0%, #226d30 78%);
+  transform-origin: bottom center;
+}
+
+.welcome-tulip .welcome-leaf-left {
+  left: -1px;
+  --leaf-rotate: -18deg;
+}
+
+.welcome-tulip .welcome-leaf-right {
+  right: -5px;
+  --leaf-rotate: 20deg;
+}
+
+.welcome-tulip-bloom {
+  position: absolute;
+  left: 0;
+  top: 5px;
+  display: block;
+  width: 44px;
+  height: 50px;
+  transform-origin: 50% 92%;
+  animation:
+    welcome-flower-pop 0.58s 0.55s ease-out both,
+    welcome-bloom-breathe 3.6s 1.12s ease-in-out infinite;
+}
+
+.welcome-tulip-bloom span {
+  position: absolute;
+  bottom: 0;
+  width: 25px;
+  height: 45px;
+  border-radius: 88% 88% 58% 58%;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.34), transparent 35%),
+    linear-gradient(180deg, var(--flower-light) 0%, var(--flower-base) 44%, var(--flower-dark) 100%);
+  box-shadow:
+    inset -4px -7px 10px rgba(0, 47, 50, 0.24),
+    inset 3px 4px 8px rgba(255, 255, 255, 0.18),
+    0 0 18px color-mix(in srgb, var(--flower-base) 55%, transparent);
+  transform-origin: 50% 100%;
+}
+
+.welcome-tulip-bloom span:nth-child(1) {
+  left: 9px;
+  z-index: 3;
+  clip-path: polygon(50% 0, 64% 20%, 100% 10%, 92% 100%, 8% 100%, 0 10%, 36% 20%);
+}
+
+.welcome-tulip-bloom span:nth-child(2) {
+  left: 0;
+  z-index: 2;
+  transform: rotate(-18deg);
+  clip-path: polygon(50% 0, 68% 24%, 100% 18%, 86% 100%, 16% 100%, 0 20%, 30% 24%);
+}
+
+.welcome-tulip-bloom span:nth-child(3) {
+  right: 0;
+  z-index: 2;
+  transform: rotate(18deg);
+  clip-path: polygon(50% 0, 70% 24%, 100% 20%, 84% 100%, 14% 100%, 0 18%, 32% 24%);
+}
+
+.welcome-tulip-bloom i {
+  position: absolute;
+  left: 13px;
+  bottom: 7px;
+  z-index: 4;
+  width: 18px;
+  height: 32px;
+  border-radius: 70% 70% 45% 45%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(0, 37, 43, 0.12));
+  box-shadow:
+    inset 5px 0 5px rgba(255, 255, 255, 0.14),
+    inset -4px 0 6px rgba(0, 43, 54, 0.2);
+}
+
+@keyframes welcome-stem-grow {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes welcome-svg-grow {
+  0% {
+    opacity: 0;
+    transform: translateY(42px) scale(0.16);
+  }
+
+  65% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.06);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes welcome-moon-breathe {
+  0%,
+  100% {
+    filter: brightness(1);
+    transform: translateY(0);
+  }
+
+  50% {
+    filter: brightness(1.08);
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes welcome-halo-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+
+  50% {
+    opacity: 0.78;
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+}
+
+@keyframes welcome-text-glow {
+  0%,
+  100% {
+    text-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.72),
+      0 0 12px rgba(255, 229, 159, 0.18);
+  }
+
+  50% {
+    text-shadow:
+      0 5px 28px rgba(0, 0, 0, 0.72),
+      0 0 24px rgba(255, 230, 154, 0.34);
+  }
+}
+
+@keyframes welcome-leaf-grow {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--leaf-rotate)) scaleX(var(--leaf-flip)) scale(0.25);
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotate(var(--leaf-rotate)) scaleX(var(--leaf-flip)) scale(1);
+  }
+}
+
+@keyframes welcome-flower-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.05) translateY(22px);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1.14) translateY(-2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes welcome-bloom-breathe {
+  0%,
+  100% {
+    transform: scale(1) rotate(-2deg);
+  }
+
+  50% {
+    transform: scale(1.08) rotate(2deg);
+  }
+}
+
+.welcome-confetti-bit,
+.welcome-heart-bit {
+  position: absolute;
+  display: block;
+  will-change: transform, opacity;
+}
+
+.welcome-confetti-bit {
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  box-shadow: 0 0 10px currentColor;
+}
+
+.welcome-heart-bit {
+  font-size: 18px;
+  filter: drop-shadow(0 0 10px rgba(255, 58, 78, 0.72));
+}
+
+@media (orientation: portrait) {
+  .welcome-moon {
+    left: clamp(1.8rem, 9vw, 4rem);
+    top: clamp(2rem, 7dvh, 4.4rem);
+    width: clamp(4.1rem, 18vw, 6.2rem);
+  }
+
+  .welcome-copy {
+    max-width: min(82vw, 440px);
+    transform: translateY(-5dvh);
+  }
+
+  .welcome-copy > div {
+    min-height: 240px !important;
+  }
+
+  .welcome-line {
+    font-size: clamp(1.55rem, 8.6vw, 2.65rem) !important;
+    line-height: 1.12 !important;
+  }
+
+  .welcome-flower-cluster {
+    width: min(43vw, 190px);
+  }
+
+  .welcome-flower-cluster-small {
+    width: min(29vw, 126px);
+  }
+
+  .welcome-flower-cluster-0 {
+    left: -10% !important;
+    top: 71% !important;
+  }
+
+  .welcome-flower-cluster-1 {
+    left: 31% !important;
+    top: 84% !important;
+  }
+
+  .welcome-flower-cluster-2 {
+    left: 66% !important;
+    top: 71% !important;
+  }
+
+  .welcome-flower-cluster-3 {
+    left: 48% !important;
+    top: 85% !important;
+  }
+
+  .welcome-flower-cluster-4,
+  .welcome-flower-cluster-5 {
+    display: none;
+  }
+}
+
+@media (orientation: landscape) {
+  .welcome-moon {
+    left: clamp(6.4rem, 22vw, 20rem);
+    top: clamp(1.6rem, 7dvh, 4.8rem);
+  }
+
+  .welcome-flower-cluster {
+    width: min(28vw, 280px);
+  }
+
+  .welcome-flower-cluster-small {
+    width: min(17vw, 168px);
+  }
+
+  .welcome-flower-cluster-0 {
+    left: -1% !important;
+    top: 65% !important;
+  }
+
+  .welcome-flower-cluster-1 {
+    left: 31% !important;
+    top: 86% !important;
+  }
+
+  .welcome-flower-cluster-2 {
+    left: 73% !important;
+    top: 65% !important;
+  }
+
+  .welcome-flower-cluster-3 {
+    left: 66% !important;
+    top: 86% !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .welcome-copy {
+    max-width: min(68vw, 620px);
+    transform: translateY(-3dvh);
+  }
+
+  .welcome-copy > div {
+    min-height: 150px !important;
+  }
+
+  .welcome-line {
+    font-size: clamp(1.16rem, 6.2vh, 2.18rem) !important;
+    line-height: 1.06 !important;
+  }
+
+  .welcome-next {
+    margin-top: 0.25rem !important;
+    padding: 0.68rem 1.6rem !important;
+    font-size: 0.74rem !important;
+  }
+
+  .welcome-heart {
+    width: 4.6rem !important;
+    height: 4.6rem !important;
+    margin-top: 1rem !important;
+    font-size: 2.3rem !important;
+  }
+
+  .welcome-flower-cluster {
+    width: min(29vw, 250px);
+  }
+
+  .welcome-flower-cluster-small {
+    width: min(18vw, 150px);
+  }
+}
+
 @media (orientation: landscape) and (max-height: 520px) {
   .diary-modal {
     align-items: center;
