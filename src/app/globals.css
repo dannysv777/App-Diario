@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --garden-dark: #1a2e1a;
+  --garden-green: #2d5a2d;
+  --garden-light: #4a8c4a;
+  --garden-gold: #d4a653;
+  --garden-rose: #c97b84;
+  --garden-sky-day: #87ceeb;
+  --garden-sky-night: #0f1b2d;
+  --garden-earth: #3d2b1f;
+  --garden-cream: #faf3e0;
+}
+
+@theme inline {
+  --color-garden-dark: var(--garden-dark);
+  --color-garden-green: var(--garden-green);
+  --color-garden-light: var(--garden-light);
+  --color-garden-gold: var(--garden-gold);
+  --color-garden-rose: var(--garden-rose);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #4e429d;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+button,
+input,
+textarea,
+label,
+article {
+  touch-action: manipulation;
+}
+
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}

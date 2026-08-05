@@ -1,0 +1,22 @@
+{
+  "name": "Nuestro Jardin",
+  "short_name": "Jardin",
+  "description": "Un jardin digital que crece con nuestra historia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#4e429d",
+  "theme_color": "#4e429d",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
