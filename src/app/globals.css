@@ -50,3 +50,203 @@ textarea {
   user-select: text;
   -webkit-user-select: text;
 }
+
+.diary-book {
+  max-height: min(90dvh, 760px);
+  width: min(calc(100vw - 24px), 1024px);
+}
+
+.diary-cover,
+.diary-paper {
+  scrollbar-width: thin;
+}
+
+.diary-cover-title,
+.diary-page-heading,
+.diary-open-page h4 {
+  font-family: "Ink Free", "Segoe Print", "Comic Sans MS", "Trebuchet MS", cursive;
+  overflow-wrap: anywhere;
+}
+
+.diary-cover-copy,
+.diary-entry-message,
+.diary-memory-card {
+  font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  overflow-wrap: anywhere;
+}
+
+.diary-paper p,
+.diary-paper h5 {
+  font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+}
+
+.diary-paper {
+  position: relative;
+  background-color: #fff0bd;
+  background:
+    linear-gradient(90deg, rgba(185, 70, 59, 0.22) 0 2px, transparent 2px 46px),
+    repeating-linear-gradient(180deg, transparent 0 27px, rgba(99, 143, 166, 0.24) 28px 29px),
+    radial-gradient(circle at 24px 36px, rgba(92, 54, 29, 0.18) 0 5px, transparent 6px),
+    radial-gradient(circle at 24px 92px, rgba(92, 54, 29, 0.15) 0 5px, transparent 6px),
+    linear-gradient(90deg, #ecd092 0%, #fff3c9 10%, #ffe9b2 100%);
+}
+
+.diary-open-page,
+.diary-memory-card {
+  background:
+    repeating-linear-gradient(180deg, rgba(255, 250, 222, 0.96) 0 26px, rgba(103, 149, 175, 0.16) 27px 28px),
+    linear-gradient(180deg, rgba(255, 250, 222, 0.94), rgba(255, 239, 188, 0.94));
+}
+
+.diary-open-page {
+  overflow: hidden;
+}
+
+.diary-entry-message {
+  max-height: 11.5rem;
+  overflow: auto;
+}
+
+.diary-empty-page {
+  min-height: 15rem;
+}
+
+.diary-form input,
+.diary-form textarea {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .diary-modal {
+    align-items: center;
+    justify-content: center;
+    padding: max(10px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)) !important;
+  }
+
+  .diary-book {
+    grid-template-columns: minmax(240px, 0.8fr) minmax(330px, 1.2fr);
+    width: calc(100vw - 36px);
+    max-height: calc(100dvh - 22px);
+    border-width: 2px !important;
+    border-radius: 18px;
+  }
+
+  .diary-cover,
+  .diary-paper {
+    max-height: calc(100dvh - 22px);
+    padding: 18px 22px 16px !important;
+  }
+
+  .diary-cover {
+    padding-top: 46px !important;
+  }
+
+  .diary-cover .absolute.inset-4 {
+    inset: 12px !important;
+  }
+
+  .diary-cover button.absolute {
+    right: 18px !important;
+    top: 18px !important;
+    padding: 5px 11px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .diary-cover p:first-child,
+  .diary-paper-header p {
+    font-size: 0.64rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: 2.2px !important;
+  }
+
+  .diary-cover-title {
+    font-size: clamp(1.18rem, 4.1vh, 1.62rem) !important;
+    line-height: 1.18 !important;
+    max-width: 15.5rem;
+    margin-bottom: 0.45rem !important;
+  }
+
+  .diary-cover-copy {
+    font-size: 0.78rem !important;
+    line-height: 1.45 !important;
+    margin-bottom: 0.75rem !important;
+    max-width: 18rem;
+  }
+
+  .diary-form {
+    padding: 10px !important;
+    gap: 0 !important;
+    border-radius: 14px !important;
+  }
+
+  .diary-form label span {
+    font-size: 0.62rem;
+  }
+
+  .diary-form input {
+    padding: 8px 10px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .diary-form textarea {
+    min-height: 58px !important;
+    max-height: 72px;
+    padding: 8px 10px !important;
+    font-size: 0.78rem !important;
+    line-height: 1.35;
+  }
+
+  .diary-paper-header {
+    margin-bottom: 0.55rem !important;
+  }
+
+  .diary-page-heading {
+    font-size: clamp(1.18rem, 4.4vh, 1.62rem) !important;
+    line-height: 1.12 !important;
+  }
+
+  .diary-open-page {
+    grid-template-columns: minmax(130px, 0.72fr) minmax(0, 1fr);
+    gap: 14px !important;
+    margin-bottom: 9px !important;
+    padding: 12px !important;
+    border-radius: 14px !important;
+  }
+
+  .diary-photo,
+  .diary-photo img,
+  .diary-photo > div {
+    min-height: 104px !important;
+    max-height: 132px;
+  }
+
+  .diary-open-page h4 {
+    font-size: clamp(0.96rem, 3.5vh, 1.22rem) !important;
+    line-height: 1.18 !important;
+    margin-bottom: 0.45rem !important;
+  }
+
+  .diary-entry-message {
+    max-height: 5.25rem;
+    font-size: 0.78rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .diary-empty-page {
+    min-height: 8.7rem;
+  }
+
+  .diary-memory-card {
+    padding: 7px !important;
+  }
+
+  .diary-memory-card > div:first-child {
+    height: 50px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .diary-memory-card h5 {
+    font-size: 0.78rem !important;
+    line-height: 1.2;
+  }
+}

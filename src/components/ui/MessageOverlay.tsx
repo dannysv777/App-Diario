@@ -50,7 +50,7 @@ export function MessageOverlay({ title, body, onClose }: MessageOverlayProps) {
           *
         </motion.div>
         <p className="mb-2 text-xs font-black uppercase" style={{ color: "#9b5a32", letterSpacing: 3 }}>
-          flor del jardin
+          flor del jard&iacute;n
         </p>
         <h3 className="mb-3 text-2xl font-black" style={{ color: "#482315" }}>
           {title}
@@ -63,7 +63,7 @@ export function MessageOverlay({ title, body, onClose }: MessageOverlayProps) {
           style={{ background: "#2f7f3e", color: "#fff7cc" }}
           onClick={onClose}
         >
-          guardar en el corazon
+          guardar en el coraz&oacute;n
         </button>
       </motion.article>
     </motion.div>

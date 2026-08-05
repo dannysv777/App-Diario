@@ -15,29 +15,23 @@ interface DiaryEntry {
   createdAt: string;
 }
 
-const storageKey = "nuestro-jardin-diary";
+const storageKey = "nuestro-jardin-diary-v2";
+const legacyStorageKey = "nuestro-jardin-diary";
 
-const starterEntries: DiaryEntry[] = [
-  {
-    id: "starter-1",
-    title: "Nuestro primer rinconcito",
-    message:
-      "Esta casita guarda las cosas bonitas que quiero recordar contigo. Aqui podremos poner fotos, mensajes y pequenas aventuras.",
-    createdAt: "Hoy",
-  },
-];
+const starterEntries: DiaryEntry[] = [];
 
 export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
   const [entries, setEntries] = useState<DiaryEntry[]>(() => {
     if (typeof window === "undefined") return starterEntries;
     try {
+      window.localStorage.removeItem(legacyStorageKey);
       const saved = window.localStorage.getItem(storageKey);
       return saved ? (JSON.parse(saved) as DiaryEntry[]) : starterEntries;
     } catch {
       return starterEntries;
     }
   });
-  const [selectedId, setSelectedId] = useState(entries[0]?.id ?? starterEntries[0].id);
+  const [selectedId, setSelectedId] = useState(entries[0]?.id ?? "");
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [image, setImage] = useState<string | undefined>();
@@ -70,7 +64,7 @@ export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
     const entry: DiaryEntry = {
       id: crypto.randomUUID(),
       title: title.trim() || "Un recuerdo bonito",
-      message: message.trim() || "Una foto para guardar en nuestro jardin.",
+      message: message.trim() || "Una foto para guardar en nuestro jard\u00edn.",
       image,
       createdAt: new Date().toLocaleDateString("es-GT", {
         day: "2-digit",
@@ -89,7 +83,7 @@ export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5"
+      className="diary-modal fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -107,7 +101,7 @@ export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
       />
 
       <motion.section
-        className="relative grid max-h-[92vh] w-full max-w-5xl grid-cols-1 overflow-hidden rounded-[22px] shadow-2xl lg:grid-cols-[0.82fr_1.18fr]"
+        className="diary-book relative grid w-full max-w-5xl grid-cols-1 overflow-hidden rounded-[22px] shadow-2xl lg:grid-cols-[0.82fr_1.18fr]"
         style={{
           background: "#4a2317",
           border: "4px solid rgba(42, 20, 12, 0.72)",
@@ -127,7 +121,7 @@ export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
         />
 
         <div
-          className="relative overflow-y-auto p-5 sm:p-7"
+          className="diary-cover relative overflow-y-auto px-6 pb-6 pt-14 sm:px-9 sm:pb-8 sm:pt-16"
           style={{
             background:
               "linear-gradient(135deg, #32170f 0%, #6d351f 45%, #a46032 100%)",
@@ -154,16 +148,18 @@ export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
             <p className="mb-2 text-xs font-bold uppercase" style={{ letterSpacing: 3, color: "#ffd36b" }}>
               La casa
             </p>
-            <h2 className="mb-3 max-w-sm text-4xl font-black leading-none">
-              Nuestro album de aventuras
+            <h2
+              className="diary-cover-title mb-4 max-w-sm text-3xl font-black leading-tight sm:text-4xl"
+            >
+              Nuestro &aacute;lbum de aventuras
             </h2>
-            <p className="mb-6 max-w-sm text-sm leading-6" style={{ color: "rgba(255, 242, 200, 0.84)" }}>
-              Una pagina para cada recuerdo. Puedes dejar una foto, una frase o
-              una nota pequena para que este jardin tambien tenga historia.
+            <p className="diary-cover-copy mb-7 max-w-sm text-sm leading-7" style={{ color: "rgba(255, 242, 200, 0.86)" }}>
+              Una p&aacute;gina para cada recuerdo. Puedes dejar una foto, una frase o
+              una nota peque&ntilde;a para que este jard&iacute;n tambi&eacute;n tenga historia.
             </p>
 
             <form
-              className="space-y-4 rounded-[18px] p-4"
+              className="diary-form space-y-5 rounded-[18px] p-4 sm:p-5"
               style={{
                 background: "rgba(42, 20, 12, 0.34)",
                 border: "1px solid rgba(255, 233, 183, 0.18)",
@@ -172,14 +168,14 @@ export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
             >
               <label className="block">
                 <span className="mb-1 block text-xs font-bold uppercase" style={{ letterSpacing: 2 }}>
-                  titulo
+                  t&iacute;tulo
                 </span>
                 <input
                   className="w-full rounded-xl border-0 px-4 py-3 text-sm outline-none"
                   style={{ background: "#fff0c7", color: "#3d2114" }}
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Ej. Nuestro dia favorito"
+                  placeholder="Ej. Nuestro d\u00eda favorito"
                 />
               </label>
 
@@ -230,37 +226,37 @@ export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
         </div>
 
         <div
-          className="max-h-[92vh] overflow-y-auto p-5 sm:p-7"
+          className="diary-paper max-h-[90vh] overflow-y-auto p-5 sm:p-8"
           style={{
-            background:
-              "linear-gradient(90deg, #f1d296 0%, #fff1c6 10%, #ffeab2 100%)",
             color: "#3f2416",
           }}
         >
-          <div className="mb-5 flex items-start justify-between gap-3">
+          <div className="diary-paper-header mb-6 flex items-start justify-between gap-4">
             <div>
               <p className="text-xs font-bold uppercase" style={{ color: "#9b5a32", letterSpacing: 3 }}>
-                pagina abierta
+                p&aacute;gina abierta
               </p>
-              <h3 className="text-3xl font-black">Recuerdos</h3>
+              <h3
+                className="diary-page-heading text-3xl font-black leading-tight"
+              >
+                Recuerdos
+              </h3>
             </div>
             <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ background: "#d59c56" }}>
               {entries.length}
             </span>
           </div>
 
-          {selectedEntry && (
+          {selectedEntry ? (
             <article
-              className="mb-6 grid gap-5 rounded-[18px] p-4 md:grid-cols-[0.82fr_1fr]"
+              className="diary-open-page mb-7 grid gap-6 rounded-[18px] p-4 sm:p-5 md:grid-cols-[0.82fr_1fr]"
               style={{
-                background:
-                  "linear-gradient(180deg, rgba(255, 250, 222, 0.9), rgba(255, 239, 188, 0.92))",
                 border: "1px solid rgba(97, 54, 27, 0.16)",
                 boxShadow: "0 16px 38px rgba(81, 43, 22, 0.14)",
               }}
             >
               <div
-                className="min-h-48 rotate-[-1.2deg] overflow-hidden rounded-md border-[12px]"
+                className="diary-photo min-h-48 rotate-[-1.2deg] overflow-hidden rounded-md border-[12px]"
                 style={{ borderColor: "#fffaf0", background: "#e5b86d" }}
               >
                 {selectedEntry.image ? (
@@ -283,11 +279,34 @@ export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
                 <p className="mb-2 text-[11px] font-black uppercase" style={{ color: "#a16236", letterSpacing: 2 }}>
                   {selectedEntry.createdAt}
                 </p>
-                <h4 className="mb-3 text-2xl font-black">{selectedEntry.title}</h4>
-                <p className="text-sm leading-7" style={{ color: "#68422d" }}>
+                <h4
+                  className="mb-4 text-2xl font-black leading-tight"
+                >
+                  {selectedEntry.title}
+                </h4>
+                <p className="diary-entry-message text-sm leading-7 sm:text-[15px]" style={{ color: "#68422d" }}>
                   {selectedEntry.message}
                 </p>
               </div>
+            </article>
+          ) : (
+            <article
+              className="diary-open-page diary-empty-page mb-7 rounded-[18px] p-5 sm:p-6"
+              style={{
+                border: "1px solid rgba(97, 54, 27, 0.16)",
+                boxShadow: "0 16px 38px rgba(81, 43, 22, 0.14)",
+              }}
+            >
+              <p className="mb-2 text-[11px] font-black uppercase" style={{ color: "#a16236", letterSpacing: 2 }}>
+                sin p&aacute;ginas guardadas
+              </p>
+              <h4 className="mb-3 text-2xl font-black leading-tight">
+                Tu primera p&aacute;gina est&aacute; esperando
+              </h4>
+              <p className="diary-entry-message text-sm leading-7 sm:text-[15px]" style={{ color: "#68422d" }}>
+                Escribe un recuerdo, sube una foto o deja una nota bonita. Esta
+                hoja queda lista para empezar el &aacute;lbum desde cero.
+              </p>
             </article>
           )}
 
@@ -297,7 +316,7 @@ export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
               return (
                 <button
                   key={entry.id}
-                  className="rounded-xl p-3 text-left transition"
+                  className="diary-memory-card rounded-xl p-3 text-left transition"
                   style={{
                     background: selected ? "#fff8dd" : "rgba(255, 248, 221, 0.58)",
                     border: selected

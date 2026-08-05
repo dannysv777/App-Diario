@@ -73,26 +73,93 @@ interface FallingLeaf {
   phase: number;
 }
 
+interface PondFish {
+  node: Container;
+  baseX: number;
+  baseY: number;
+  width: number;
+  speed: number;
+  phase: number;
+}
+
+type GardenFlowerType = "daisy" | "tulip" | "sunflower" | "rose";
+
 const flowerMessages: FlowerMessage[] = [
   {
-    title: "Para los dias pesados",
-    body: "Respira un poquito, mi amor. No tienes que poder con todo al mismo tiempo. Yo creo en ti, incluso cuando tu energia esta bajita.",
+    title: "Feliz 19",
+    body: "Quer\u00eda ser de las primeras personas en desearte un feliz cumplea\u00f1os n\u00famero 19, lleno de salud, alegr\u00eda y momentos bonitos.",
   },
   {
-    title: "Tu forma de brillar",
-    body: "Hay algo en ti que vuelve mas bonito cualquier lugar. Gracias por existir con esa ternura tan tuya.",
+    title: "Con el coraz\u00f3n",
+    body: "Tal vez no encuentre las palabras perfectas, pero cada una de ellas es sincera y nace de todo lo bonito que siento por ti.",
   },
   {
-    title: "Recordatorio",
-    body: "Eres suficiente. No por lo que haces, no por lo que logras, sino por quien eres.",
+    title: "Qu\u00e9 r\u00e1pido pasa",
+    body: "Ya son 19 a\u00f1os. Me alegra poder celebrar otro cumplea\u00f1os contigo y guardar este momento en nuestro jard\u00edn.",
   },
   {
-    title: "Mi lugar favorito",
-    body: "Si algun dia dudas de lo mucho que importas, vuelve a este jardin. Cada flor esta aqui para recordarte que eres amada.",
+    title: "Una sonrisa",
+    body: "Espero que cuando vuelvas a ver este detalle alg\u00fan d\u00eda, recuerdes este momento con una sonrisa.",
   },
   {
-    title: "Un abrazo guardado",
-    body: "Te dejo aqui un abrazo para cuando lo necesites: de esos que no apuran, no juzgan y solo acompanan.",
+    title: "Nueva etapa",
+    body: "Este es tu \u00faltimo a\u00f1o con el 1 al inicio de tu edad. Lo mejor de esta nueva etapa todav\u00eda est\u00e1 por llegar.",
+  },
+  {
+    title: "Sin miedo",
+    body: "Crecer puede dar miedo, pero no dejes que ese miedo sea m\u00e1s grande que tus sue\u00f1os.",
+  },
+  {
+    title: "Lo mucho que vales",
+    body: "Nunca olvides lo mucho que vales. Eres inteligente, fuerte y capaz de lograr aquello que te propongas.",
+  },
+  {
+    title: "Podr\u00e1s con todo",
+    body: "Todav\u00eda quedan retos por superar, pero estoy seguro de que podr\u00e1s con cada uno de ellos.",
+  },
+  {
+    title: "Violeta que crece",
+    body: "Admiro la persona en la que te est\u00e1s convirtiendo: alguien que lucha, aprende y nunca deja de crecer.",
+  },
+  {
+    title: "No lo olvides",
+    body: "No dejes que nadie te haga creer que no puedes. Tienes una luz y una fuerza muy tuyas.",
+  },
+  {
+    title: "Tu sonrisa",
+    body: "Si pudiera pedir un regalo, ser\u00eda que nunca dejaras de sonre\u00edr. Tu sonrisa alegra m\u00e1s de lo que imaginas.",
+  },
+  {
+    title: "Siempre apoyo",
+    body: "Quiero seguir apoy\u00e1ndote de cerca o de lejos, en tus alegr\u00edas, tus metas y tus d\u00edas dif\u00edciles.",
+  },
+  {
+    title: "Yo creo en ti",
+    body: "Cuando necesites que alguien crea en ti, recuerda esta flor: yo siempre creer\u00e9 en ti.",
+  },
+  {
+    title: "M\u00e1s momentos",
+    body: "Le pido a Dios que nos permita compartir muchos momentos juntos y celebrar muchos cumplea\u00f1os m\u00e1s.",
+  },
+  {
+    title: "Recuerdos bonitos",
+    body: "Ojal\u00e1 pueda seguir regal\u00e1ndote peque\u00f1os detalles, pero sobre todo muchos recuerdos bonitos.",
+  },
+  {
+    title: "Verte feliz",
+    body: "No s\u00e9 qu\u00e9 nos depare el futuro, pero s\u00ed deseo verte feliz y orgullosa de la gran mujer que eres.",
+  },
+  {
+    title: "Nunca dudes",
+    body: "Aunque alguna vez puedas dudarlo, nunca dudes del enorme cari\u00f1o y amor que siento por ti.",
+  },
+  {
+    title: "Gracias",
+    body: "Gracias por permitirme compartir un pedacito de tu vida y por hacer la m\u00eda m\u00e1s bonita desde que llegaste.",
+  },
+  {
+    title: "Princesa hermosa",
+    body: "Feliz cumplea\u00f1os, mi princesa hermosa. Que Dios bendiga tus pasos y los deseos m\u00e1s bonitos de tu coraz\u00f3n.",
   },
 ];
 
@@ -121,6 +188,9 @@ const colors = {
   flowerPurple: 0x7d48d8,
   flowerYellow: 0xffc43d,
   flowerWhite: 0xfff5db,
+  lake: 0x2f95aa,
+  lakeDeep: 0x1d677f,
+  lakeLight: 0x92dddf,
   seed: 0x7b4b28,
   seedLight: 0xd58b3d,
 };
@@ -178,6 +248,7 @@ export function GardenScene() {
         const min = Math.min(w, h);
 
         drawStorybookLandscape(stage, w, h, groundY);
+        const pondFish = drawLake(stage, w * 0.35, groundY + h * 0.18, min * 0.22);
         const fireflies = drawFireflies(stage, w, h, groundY);
         const butterflies = drawButterflies(stage, w, h, groundY);
         const birds = drawSkyBirds(stage, w, h);
@@ -221,6 +292,7 @@ export function GardenScene() {
           animateButterflies(butterflies, t);
           animateSkyBirds(birds, t, w);
           animateFallingLeaves(leaves, t, h, groundY);
+          animatePondFish(pondFish, t);
           parts.seed.y = Math.sin(t * 0.002) * 5;
           parts.glow.alpha = 0.34 + Math.sin(t * 0.003) * 0.16;
           prompt.alpha = 0.62 + Math.sin(t * 0.003) * 0.28;
@@ -333,12 +405,16 @@ function drawStorybookLandscape(parent: Container, w: number, h: number, groundY
   drawLargeTree(parent, w * 0.1, groundY + h * 0.03, Math.min(w, h));
   drawStonePath(parent, w, h, groundY);
   drawFlowerArch(parent, w * 0.55, groundY + h * 0.02, Math.min(w, h) * 0.16);
+  drawBushes(parent, w, h, groundY);
 }
 
 function drawGround(parent: Container, w: number, h: number, groundY: number) {
   const ground = new Graphics();
   ground.rect(0, groundY, w, h - groundY).fill({ color: colors.grass });
   ground.rect(0, groundY, w, h * 0.08).fill({ color: colors.grassLight, alpha: 0.42 });
+  ground.ellipse(w * 0.15, groundY + h * 0.22, w * 0.22, h * 0.08).fill({ color: colors.grassDark, alpha: 0.16 });
+  ground.ellipse(w * 0.72, groundY + h * 0.27, w * 0.28, h * 0.09).fill({ color: 0x123f25, alpha: 0.16 });
+  ground.ellipse(w * 0.5, groundY + h * 0.12, w * 0.16, h * 0.05).fill({ color: 0x82bd47, alpha: 0.12 });
   parent.addChild(ground);
 
   const ambient = new Container();
@@ -353,6 +429,15 @@ function drawGround(parent: Container, w: number, h: number, groundY: number) {
     blade.quadraticCurveTo(x + ((i % 2) ? 7 : -7), y - 18, x + ((i % 2) ? 11 : -11), y - 28);
     blade.stroke({ color: i % 3 === 0 ? 0x80c85a : 0x3f9848, width: 2, alpha: 0.48 });
     ambient.addChild(blade);
+  }
+
+  for (let i = 0; i < 95; i++) {
+    const speck = new Graphics();
+    const x = w * ((i * 0.113 + 0.021) % 1);
+    const y = groundY + h * (0.02 + ((i * 0.071) % 0.38));
+    const color = [0x78c95a, 0x255f35, 0xffd25d, 0xf6e7a4][i % 4];
+    speck.circle(x, y, 1.2 + (i % 3) * 0.55).fill({ color, alpha: i % 4 === 3 ? 0.28 : 0.36 });
+    ambient.addChild(speck);
   }
 }
 
@@ -378,6 +463,95 @@ function drawDistantHills(parent: Container, w: number, h: number, groundY: numb
   parent.addChild(front);
 }
 
+function drawLake(parent: Container, x: number, y: number, s: number): PondFish[] {
+  const pond = new Container();
+  parent.addChild(pond);
+
+  const shadow = new Graphics();
+  shadow.ellipse(x, y + s * 0.12, s * 1.12, s * 0.34).fill({ color: 0x0d332f, alpha: 0.28 });
+  pond.addChild(shadow);
+
+  const water = new Graphics();
+  water.ellipse(x, y, s, s * 0.34).fill({ color: colors.lakeDeep, alpha: 0.96 });
+  water.ellipse(x - s * 0.04, y - s * 0.02, s * 0.92, s * 0.29).fill({ color: colors.lake, alpha: 0.9 });
+  water.ellipse(x - s * 0.22, y - s * 0.08, s * 0.36, s * 0.055).fill({ color: colors.lakeLight, alpha: 0.58 });
+  water.ellipse(x + s * 0.32, y + s * 0.02, s * 0.28, s * 0.04).fill({ color: 0xb8f2e7, alpha: 0.35 });
+  water.stroke({ color: 0x164b52, width: Math.max(3, s * 0.035), alpha: 0.5 });
+  pond.addChild(water);
+
+  for (let i = 0; i < 12; i++) {
+    const reed = new Graphics();
+    const rx = x - s * 0.92 + ((i * 0.17) % 1.84) * s;
+    const ry = y + s * (0.19 + (i % 3) * 0.03);
+    reed.moveTo(rx, ry);
+    reed.quadraticCurveTo(rx + (i % 2 ? 8 : -8), ry - s * 0.22, rx + (i % 2 ? 14 : -14), ry - s * 0.36);
+    reed.stroke({ color: 0x2a7a35, width: 3, alpha: 0.8 });
+    reed.ellipse(rx + (i % 2 ? 14 : -14), ry - s * 0.36, 4, 10).fill({ color: 0x996c31, alpha: 0.85 });
+    pond.addChild(reed);
+  }
+
+  const fish: PondFish[] = [];
+  const fishSpecs = [
+    { dx: -0.42, dy: -0.03, c: 0xff9b54, speed: 0.00012 },
+    { dx: 0.16, dy: 0.05, c: 0xffd36b, speed: 0.0001 },
+    { dx: 0.42, dy: -0.07, c: 0xff7f86, speed: 0.00014 },
+  ];
+
+  fishSpecs.forEach((spec, index) => {
+    const node = new Container();
+    node.x = x + s * spec.dx;
+    node.y = y + s * spec.dy;
+    node.alpha = 0.78;
+    const body = new Graphics();
+    body.ellipse(0, 0, s * 0.075, s * 0.033).fill({ color: spec.c, alpha: 0.92 });
+    body.moveTo(-s * 0.07, 0).lineTo(-s * 0.13, -s * 0.045).lineTo(-s * 0.13, s * 0.045).closePath();
+    body.fill({ color: spec.c, alpha: 0.84 });
+    body.circle(s * 0.045, -s * 0.008, 1.8).fill({ color: 0x2b1d31, alpha: 0.8 });
+    node.addChild(body);
+    pond.addChild(node);
+    fish.push({
+      node,
+      baseX: node.x,
+      baseY: node.y,
+      width: s * 0.72,
+      speed: spec.speed,
+      phase: index * 1.6,
+    });
+  });
+
+  return fish;
+}
+
+function drawBushes(parent: Container, w: number, h: number, groundY: number) {
+  const specs = [
+    { x: 0.05, y: 0.05, s: 0.18 },
+    { x: 0.14, y: 0.1, s: 0.13 },
+    { x: 0.64, y: 0.06, s: 0.15 },
+    { x: 0.93, y: 0.13, s: 0.16 },
+    { x: 0.72, y: 0.24, s: 0.11 },
+  ];
+
+  specs.forEach((spec, index) => {
+    const x = w * spec.x;
+    const y = groundY + h * spec.y;
+    const s = Math.min(w, h) * spec.s;
+    const bush = new Graphics();
+    bush.ellipse(x, y + s * 0.34, s * 0.82, s * 0.18).fill({ color: 0x123f25, alpha: 0.28 });
+    bush.circle(x - s * 0.38, y, s * 0.32).fill({ color: index % 2 ? 0x2d742d : 0x1e5e2c });
+    bush.circle(x - s * 0.08, y - s * 0.12, s * 0.38).fill({ color: 0x3e8f35 });
+    bush.circle(x + s * 0.28, y, s * 0.33).fill({ color: 0x2f752e });
+    bush.circle(x + s * 0.05, y + s * 0.08, s * 0.36).fill({ color: 0x4c9a3b, alpha: 0.88 });
+    for (let i = 0; i < 7; i++) {
+      bush.circle(
+        x - s * 0.38 + ((i * 0.19) % 0.82) * s,
+        y - s * 0.14 + ((i * 0.11) % 0.34) * s,
+        s * 0.025,
+      ).fill({ color: [0xff9fb8, 0xffd36b, 0xfff5db][i % 3], alpha: 0.9 });
+    }
+    parent.addChild(bush);
+  });
+}
+
 function drawLargeTree(parent: Container, x: number, y: number, min: number) {
   const tree = new Container();
   parent.addChild(tree);
@@ -395,6 +569,12 @@ function drawLargeTree(parent: Container, x: number, y: number, min: number) {
     trunk.moveTo(x - s * 0.07, y - s * (0.42 + i * 0.08));
     trunk.quadraticCurveTo(x + s * (0.2 + i * 0.08), y - s * (0.56 + i * 0.05), x + s * (0.56 + i * 0.04), y - s * (0.64 + i * 0.08));
     trunk.stroke({ color: colors.trunkLight, width: Math.max(5, s * 0.035), alpha: 0.8 });
+  }
+  for (let i = 0; i < 10; i++) {
+    const bx = x - s * 0.12 + ((i * 0.037) % 0.24) * s;
+    trunk.moveTo(bx, y - s * (0.08 + i * 0.07));
+    trunk.quadraticCurveTo(bx + (i % 2 ? 10 : -8), y - s * (0.14 + i * 0.07), bx + (i % 2 ? 4 : -6), y - s * (0.2 + i * 0.07));
+    trunk.stroke({ color: 0x2a160e, width: 2, alpha: 0.28 });
   }
   tree.addChild(trunk);
 
@@ -448,6 +628,18 @@ function drawHouse(parent: Container, x: number, y: number, s: number) {
   house.lineTo(0, -s * 0.88);
   house.lineTo(s * 0.46, -s * 0.58);
   house.stroke({ color: colors.roofLight, width: 5, alpha: 0.75 });
+  for (let i = 0; i < 5; i++) {
+    const yy = -s * (0.56 + i * 0.07);
+    house.moveTo(-s * (0.5 - i * 0.055), yy);
+    house.lineTo(s * (0.5 - i * 0.055), yy);
+    house.stroke({ color: 0x5f2244, width: 2, alpha: 0.32 });
+  }
+  for (let i = 0; i < 7; i++) {
+    const xx = -s * 0.34 + i * s * 0.11;
+    house.moveTo(xx, -s * 0.46);
+    house.lineTo(xx + s * 0.025, -s * 0.1);
+    house.stroke({ color: 0xc48a5a, width: 1.2, alpha: 0.25 });
+  }
   house.roundRect(-s * 0.09, -s * 0.28, s * 0.18, s * 0.28, 9).fill({ color: 0x7b4329 });
   house.circle(0.04 * s, -s * 0.14, 3).fill({ color: 0xffd05c });
   house.roundRect(-s * 0.32, -s * 0.42, s * 0.17, s * 0.15, 5).fill({ color: 0xffdc70 });
@@ -487,15 +679,29 @@ function drawTinyVines(parent: Container, x: number, y: number, s: number) {
 
 function drawInteractiveFlowers(parent: Container, w: number, h: number, groundY: number, onMessage: (message: FlowerMessage) => void) {
   const positions = [
-    { x: 0.16, y: 0.31, s: 1.18, color: colors.flowerPink },
-    { x: 0.24, y: 0.26, s: 0.92, color: colors.flowerPurple },
-    { x: 0.31, y: 0.2, s: 1.08, color: colors.flowerYellow },
-    { x: 0.83, y: 0.28, s: 0.95, color: colors.flowerWhite },
-    { x: 0.9, y: 0.22, s: 0.82, color: colors.flowerYellow },
+    { x: 0.08, y: 0.29, s: 1.08, color: colors.flowerPink, type: "rose" as GardenFlowerType },
+    { x: 0.13, y: 0.34, s: 0.9, color: 0xff7a9b, type: "rose" as GardenFlowerType },
+    { x: 0.19, y: 0.28, s: 0.82, color: colors.flowerPurple, type: "tulip" as GardenFlowerType },
+    { x: 0.24, y: 0.36, s: 0.72, color: 0xff8f57, type: "tulip" as GardenFlowerType },
+    { x: 0.29, y: 0.2, s: 1.05, color: colors.flowerYellow, type: "sunflower" as GardenFlowerType },
+    { x: 0.35, y: 0.31, s: 0.74, color: colors.flowerWhite, type: "daisy" as GardenFlowerType },
+    { x: 0.42, y: 0.26, s: 0.74, color: 0xff7a9b, type: "tulip" as GardenFlowerType },
+    { x: 0.47, y: 0.36, s: 0.62, color: 0xffd36b, type: "daisy" as GardenFlowerType },
+    { x: 0.55, y: 0.34, s: 0.7, color: 0xffb14a, type: "daisy" as GardenFlowerType },
+    { x: 0.6, y: 0.24, s: 0.72, color: 0xf15f67, type: "rose" as GardenFlowerType },
+    { x: 0.66, y: 0.35, s: 0.68, color: colors.flowerPurple, type: "tulip" as GardenFlowerType },
+    { x: 0.71, y: 0.28, s: 0.76, color: colors.flowerYellow, type: "sunflower" as GardenFlowerType },
+    { x: 0.76, y: 0.37, s: 0.66, color: 0xff8fa7, type: "rose" as GardenFlowerType },
+    { x: 0.82, y: 0.28, s: 0.82, color: colors.flowerWhite, type: "daisy" as GardenFlowerType },
+    { x: 0.87, y: 0.35, s: 0.7, color: 0xff5f78, type: "rose" as GardenFlowerType },
+    { x: 0.92, y: 0.22, s: 0.8, color: colors.flowerYellow, type: "sunflower" as GardenFlowerType },
+    { x: 0.16, y: 0.18, s: 0.62, color: 0xffc0d1, type: "daisy" as GardenFlowerType },
+    { x: 0.68, y: 0.16, s: 0.58, color: 0xff7a9b, type: "tulip" as GardenFlowerType },
+    { x: 0.94, y: 0.32, s: 0.58, color: 0xfff5db, type: "daisy" as GardenFlowerType },
   ];
 
   positions.forEach((item, index) => {
-    const flower = drawGardenFlower(parent, w * item.x, groundY + h * item.y, Math.min(w, h) * 0.065 * item.s, item.color);
+    const flower = drawGardenFlower(parent, w * item.x, groundY + h * item.y, Math.min(w, h) * 0.065 * item.s, item.color, item.type);
     flower.eventMode = "static";
     flower.cursor = "pointer";
     flower.hitArea = new Rectangle(-40, -88, 80, 100);
@@ -508,7 +714,7 @@ function drawInteractiveFlowers(parent: Container, w: number, h: number, groundY
   });
 }
 
-function drawGardenFlower(parent: Container, x: number, y: number, s: number, petalColor: number) {
+function drawGardenFlower(parent: Container, x: number, y: number, s: number, petalColor: number, type: GardenFlowerType) {
   const flower = new Container();
   flower.x = x;
   flower.y = y;
@@ -525,18 +731,69 @@ function drawGardenFlower(parent: Container, x: number, y: number, s: number, pe
   const head = new Container();
   head.y = -s;
   flower.addChild(head);
-  for (let i = 0; i < 8; i++) {
+
+  if (type === "sunflower") drawSunflowerHead(head, s, petalColor);
+  if (type === "tulip") drawTulipHead(head, s, petalColor);
+  if (type === "rose") drawRoseHead(head, s, petalColor);
+  if (type === "daisy") drawDaisyHead(head, s, petalColor);
+
+  return flower;
+}
+
+function drawDaisyHead(parent: Container, s: number, petalColor: number) {
+  for (let i = 0; i < 9; i++) {
     const petal = new Graphics();
-    petal.ellipse(0, -s * 0.32, s * 0.17, s * 0.34).fill({ color: petalColor });
-    petal.rotation = (Math.PI * 2 * i) / 8;
-    head.addChild(petal);
+    petal.ellipse(0, -s * 0.32, s * 0.15, s * 0.34).fill({ color: petalColor });
+    petal.rotation = (Math.PI * 2 * i) / 9;
+    parent.addChild(petal);
   }
   const center = new Graphics();
   center.circle(0, 0, s * 0.2).fill({ color: 0xffb72f });
   center.circle(-s * 0.05, -s * 0.05, s * 0.06).fill({ color: 0xffe18f, alpha: 0.8 });
-  head.addChild(center);
+  parent.addChild(center);
+}
 
-  return flower;
+function drawSunflowerHead(parent: Container, s: number, petalColor: number) {
+  for (let i = 0; i < 14; i++) {
+    const petal = new Graphics();
+    petal.ellipse(0, -s * 0.32, s * 0.12, s * 0.32).fill({ color: petalColor });
+    petal.rotation = (Math.PI * 2 * i) / 14;
+    parent.addChild(petal);
+  }
+  const center = new Graphics();
+  center.circle(0, 0, s * 0.25).fill({ color: 0x5b321d });
+  for (let i = 0; i < 12; i++) {
+    center.circle(Math.cos(i) * s * 0.1, Math.sin(i * 1.7) * s * 0.1, s * 0.025).fill({ color: 0x8c5b2e, alpha: 0.8 });
+  }
+  parent.addChild(center);
+}
+
+function drawTulipHead(parent: Container, s: number, petalColor: number) {
+  const cup = new Graphics();
+  cup.moveTo(-s * 0.34, -s * 0.1);
+  cup.bezierCurveTo(-s * 0.36, -s * 0.48, -s * 0.12, -s * 0.62, 0, -s * 0.24);
+  cup.bezierCurveTo(s * 0.12, -s * 0.62, s * 0.36, -s * 0.48, s * 0.34, -s * 0.1);
+  cup.bezierCurveTo(s * 0.24, s * 0.22, -s * 0.24, s * 0.22, -s * 0.34, -s * 0.1);
+  cup.fill({ color: petalColor });
+  cup.stroke({ color: 0x7d2d4a, width: Math.max(1.5, s * 0.04), alpha: 0.35 });
+  cup.ellipse(0, -s * 0.08, s * 0.16, s * 0.26).fill({ color: 0xffb1c5, alpha: 0.28 });
+  parent.addChild(cup);
+}
+
+function drawRoseHead(parent: Container, s: number, petalColor: number) {
+  const rose = new Graphics();
+  rose.circle(0, 0, s * 0.34).fill({ color: 0x8f1f43, alpha: 0.9 });
+  for (let i = 0; i < 7; i++) {
+    rose.ellipse(
+      Math.cos(i * 1.7) * s * 0.08,
+      Math.sin(i * 1.7) * s * 0.08,
+      s * (0.18 - i * 0.008),
+      s * 0.1,
+    ).fill({ color: i % 2 ? petalColor : 0xff8da8, alpha: 0.92 });
+    rose.rotation += 0.08;
+  }
+  rose.circle(0, 0, s * 0.08).fill({ color: 0xffc1cc });
+  parent.addChild(rose);
 }
 
 function drawSeedAndFlower(parent: Container, x: number, y: number, sizeBase: number): BloomParts {
@@ -874,6 +1131,16 @@ function animateFallingLeaves(items: FallingLeaf[], t: number, h: number, ground
     item.node.y = item.baseY + loop * (groundY + h * 0.14);
     item.node.rotation = item.phase + t * 0.0012;
     item.node.alpha = item.node.y > groundY + h * 0.12 ? 0 : 0.76;
+  });
+}
+
+function animatePondFish(items: PondFish[], t: number) {
+  items.forEach((fish, index) => {
+    const swim = Math.sin(t * fish.speed + fish.phase);
+    fish.node.x = fish.baseX + swim * fish.width;
+    fish.node.y = fish.baseY + Math.cos(t * fish.speed * 2.1 + fish.phase) * 5;
+    fish.node.scale.x = swim < 0 ? -1 : 1;
+    fish.node.rotation = Math.sin(t * fish.speed * 3 + index) * 0.08;
   });
 }
 
