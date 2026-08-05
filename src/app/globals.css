@@ -228,21 +228,12 @@ textarea {
   left: clamp(2.2rem, 16vw, 14rem);
   top: clamp(2rem, 8dvh, 5.5rem);
   width: clamp(4rem, 12vw, 7rem);
-  height: clamp(4rem, 12vw, 7rem);
-  border-radius: 999px;
-  background: #ffe49d;
-  box-shadow:
-    0 0 34px rgba(255, 230, 169, 0.82),
-    0 0 110px rgba(255, 204, 93, 0.32);
+  height: auto;
+  overflow: visible;
+  filter:
+    drop-shadow(0 0 22px rgba(255, 235, 170, 0.84))
+    drop-shadow(0 0 76px rgba(255, 209, 93, 0.38));
   animation: welcome-moon-breathe 5.8s ease-in-out infinite;
-}
-
-.resource-loader-moon::after {
-  content: "";
-  position: absolute;
-  inset: -6% -18% 6% 32%;
-  border-radius: 999px;
-  background: #061316;
 }
 
 .resource-loader-title {
@@ -268,46 +259,16 @@ textarea {
     0 0 28px rgba(105, 221, 225, 0.24);
 }
 
-.resource-loader-flowers {
-  height: 28dvh;
+.resource-loader-daisies {
   pointer-events: none;
 }
 
-.resource-loader-flowers span {
-  position: absolute;
-  left: calc(8% + (var(--i) * 10.5%));
-  bottom: calc(10px + ((var(--i) % 3) * 14px));
-  width: clamp(24px, 6vw, 46px);
-  height: clamp(66px, 14vw, 118px);
-  transform-origin: bottom center;
-  animation: resource-flower-grow 0.72s calc(var(--i) * 80ms) ease-out both;
-}
-
-.resource-loader-flowers span::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 5px;
-  height: 72%;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #68d184, #1c6339);
-  transform: translateX(-50%) rotate(calc(-5deg + (var(--i) * 1deg)));
-}
-
-.resource-loader-flowers span::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at center, #d38b1d 0 18%, transparent 19%),
-    conic-gradient(from 0deg, #ffd25d, #fff2a6, #ffd25d, #69dde1, #9d71ff, #ffd25d);
-  box-shadow: 0 0 22px rgba(255, 210, 93, 0.36);
-  transform: translateX(-50%) scale(calc(0.76 + (var(--i) % 3) * 0.12));
+.resource-loader-daisy {
+  height: auto;
+  filter:
+    drop-shadow(0 0 14px rgba(255, 210, 93, 0.24))
+    drop-shadow(0 10px 20px rgba(0, 0, 0, 0.28));
+  transform-origin: center;
 }
 
 .garden-reveal {

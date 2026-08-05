@@ -437,65 +437,24 @@ function DecorativeFlowers({
           strokeWidth="7"
           strokeLinejoin="round"
         />
-        <path d="M108 205 C112 176 126 136 144 109" className="welcome-svg-stem" />
-        <path d="M158 205 C171 166 186 128 196 105" className="welcome-svg-stem" />
-        <path d="M206 205 C214 174 235 147 258 133" className="welcome-svg-stem" />
+        <path d="M104 205 C109 176 116 142 111 103" className="welcome-svg-stem" />
+        <path d="M158 205 C160 165 160 128 160 94" className="welcome-svg-stem" />
+        <path d="M212 205 C207 173 217 143 230 114" className="welcome-svg-stem" />
         <path d="M92 183 C70 145 72 113 118 137 C121 160 111 176 92 183 Z" className="welcome-svg-leaf" />
         <path d="M139 193 C119 151 130 116 170 131 C173 160 161 181 139 193 Z" className="welcome-svg-leaf" />
         <path d="M182 193 C206 148 201 120 240 134 C242 161 219 185 182 193 Z" className="welcome-svg-leaf" />
         <path d="M216 197 C236 164 261 151 279 174 C262 192 240 199 216 197 Z" className="welcome-svg-leaf" />
+        <DaisyFlower x={108} y={82} rotate={-12} scale={0.98} palette={flowerPalettes[0]} />
+        <DaisyFlower x={160} y={70} rotate={4} scale={1.08} palette={flowerPalettes[1]} />
+        <DaisyFlower x={230} y={95} rotate={14} scale={0.96} palette={flowerPalettes[2]} />
         {!compact && (
           <>
-            <DaisyFlower x={26} y={146} rotate={-20} scale={0.56} palette={flowerPalettes[0]} />
-            <DaisyFlower x={296} y={148} rotate={18} scale={0.56} palette={flowerPalettes[1]} />
+            <DaisyFlower x={34} y={148} rotate={-20} scale={0.58} palette={flowerPalettes[2]} />
+            <DaisyFlower x={292} y={150} rotate={18} scale={0.58} palette={flowerPalettes[0]} />
           </>
         )}
-        <TulipFlower x={88} y={42} rotate={-15} scale={0.96} palette={flowerPalettes[0]} />
-        <TulipFlower x={155} y={16} rotate={0} scale={1.08} palette={flowerPalettes[1]} />
-        <TulipFlower x={222} y={44} rotate={15} scale={0.96} palette={flowerPalettes[2]} />
       </g>
     </motion.svg>
-  );
-}
-
-function TulipFlower({
-  x,
-  y,
-  rotate,
-  scale,
-  palette,
-}: {
-  x: number;
-  y: number;
-  rotate: number;
-  scale: number;
-  palette: (typeof flowerPalettes)[number];
-}) {
-  return (
-    <g transform={`translate(${x} ${y}) rotate(${rotate}) scale(${scale})`} className="welcome-svg-flower">
-      <path
-        d="M38 82 C10 67 1 35 12 15 C25 19 34 31 38 47 C42 31 51 17 66 10 C80 27 77 64 38 82 Z"
-        fill={palette.base}
-        stroke={palette.dark}
-        strokeWidth="7"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M38 82 C22 64 22 32 38 7 C56 32 55 64 38 82 Z"
-        fill={palette.light}
-        stroke={palette.dark}
-        strokeWidth="6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M16 20 C25 20 34 35 36 56"
-        fill="none"
-        stroke="#ffffff"
-        strokeOpacity="0.28"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-    </g>
   );
 }
 
@@ -512,7 +471,7 @@ function DaisyFlower({
   scale: number;
   palette: (typeof flowerPalettes)[number];
 }) {
-  const petals = Array.from({ length: 6 }, (_, index) => index * 60);
+  const petals = Array.from({ length: 7 }, (_, index) => index * (360 / 7));
 
   return (
     <g transform={`translate(${x} ${y}) rotate(${rotate}) scale(${scale})`} className="welcome-svg-flower">
@@ -520,17 +479,25 @@ function DaisyFlower({
         <ellipse
           key={angle}
           cx="0"
-          cy="-22"
+          cy="-24"
           rx="13"
-          ry="25"
+          ry="27"
           fill={palette.base}
           stroke={palette.dark}
-          strokeWidth="5"
+          strokeWidth="5.5"
           transform={`rotate(${angle})`}
         />
       ))}
-      <circle cx="0" cy="0" r="13" fill="#e29b24" stroke="#b46a18" strokeWidth="5" />
-      <circle cx="-4" cy="-5" r="4" fill="#fff3a8" opacity="0.85" />
+      <circle cx="0" cy="0" r="14" fill="#ffc43d" stroke="#c98219" strokeWidth="5" />
+      <circle cx="-4" cy="-5" r="4.5" fill="#fff2a6" opacity="0.86" />
+      <path
+        d="M-5 -18 C-10 -8 -10 8 -4 16"
+        fill="none"
+        stroke={palette.light}
+        strokeOpacity="0.36"
+        strokeWidth="4"
+        strokeLinecap="round"
+      />
     </g>
   );
 }

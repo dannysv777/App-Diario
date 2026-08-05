@@ -63,7 +63,7 @@ export function MessageOverlay({ title, body, onClose }: MessageOverlayProps) {
           style={{ background: "#2f7f3e", color: "#fff7cc" }}
           onClick={onClose}
         >
-          guardar en el coraz&oacute;n
+          Recordarlo
         </button>
       </motion.article>
     </motion.div>

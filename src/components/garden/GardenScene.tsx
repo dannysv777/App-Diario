@@ -85,90 +85,95 @@ interface PondFish {
 
 type GardenFlowerType = "daisy" | "tulip" | "sunflower" | "rose";
 
-const flowerMessages: FlowerMessage[] = [
-  {
-    title: "Feliz cumplea\u00f1os",
-    body: "Feliz cumplea\u00f1os a la mujer m\u00e1s fuerte.",
-  },
-  {
-    title: "Incre\u00edble",
-    body: "Hoy celebras un a\u00f1o de ser incre\u00edble.",
-  },
-  {
-    title: "Tus metas",
-    body: "Este a\u00f1o cumplir\u00e1s cada una de tus metas.",
-  },
-  {
-    title: "Tu luz",
-    body: "El mundo es mejor con tu luz.",
-  },
-  {
-    title: "Brilla siempre",
-    body: "Brilla hoy y siempre. \u00a1Feliz d\u00eda!",
-  },
-  {
-    title: "Cada paso",
-    body: "Agradezco cada paso que te trajo aqu\u00ed.",
-  },
-  {
-    title: "Cosas grandes",
-    body: "Naciste para lograr cosas grandes, mi amor.",
-  },
-  {
-    title: "Mi motor",
-    body: "Tu sonrisa es mi motor, nunca dejes de brillar.",
-  },
-  {
-    title: "Orgullo",
-    body: "Que este nuevo a\u00f1o te llene de orgullo.",
-  },
-  {
-    title: "Inspiraci\u00f3n",
-    body: "Eres mi mayor inspiraci\u00f3n. \u00a1Feliz cumplea\u00f1os!",
-  },
-  {
-    title: "Mejor a\u00f1o",
-    body: "Hoy empieza tu mejor a\u00f1o.",
-  },
-  {
-    title: "Sin l\u00edmites",
-    body: "No hay meta que te quede grande.",
-  },
-  {
-    title: "Conquistar",
-    body: "Estoy listo para ver c\u00f3mo conquistas este a\u00f1o.",
-  },
-  {
-    title: "Potencial",
-    body: "Tu potencial no tiene l\u00edmites, disfr\u00fatalo.",
-  },
-  {
-    title: "Creo en ti",
-    body: "Cree en ti como yo creo en ti.",
-  },
+const flowerMessageBodies = [
+  "Mi deseo favorito siempre será verte feliz.",
+  "Que nunca olvides lo increíble que eres.",
+  "Gracias por existir justo en el mismo tiempo que yo.",
+  "Tu sonrisa hace más bonito cualquier lugar.",
+  "Quiero estar presente mientras cumples cada uno de tus sueños.",
+  "Hoy celebro tu vida y la suerte de conocerte.",
+  "Eres una parte muy bonita de mi vida.",
+  "Quiero seguir construyendo recuerdos contigo.",
+  "Que la vida te devuelva toda la alegría que das.",
+  "Me haces querer construir algo bonito y verdadero.",
+  "Mi lugar favorito también puede ser a tu lado.",
+  "Cumplir 19 te queda tan bonito como sonreír.",
+  "Nunca dudes del hermoso corazón que tienes.",
+  "Eres mucho más capaz de lo que algunas veces crees.",
+  "Hay algo en ti que hace que todo se sienta más bonito.",
+  "Tu forma de ser es una de mis cosas favoritas.",
+  "No necesitas ser perfecta para ser increíble.",
+  "Espero que algún día puedas verte como yo te veo.",
+  "Eres hermosa por fuera y aún más por dentro.",
+  "Tu presencia convierte momentos simples en recuerdos especiales.",
+  "El mundo es un poquito más bonito desde que estás en él.",
+  "Nunca dejes de ser esa niña de corazón tan bonito.",
+  "Cuando dudes de ti, yo te recordaré todo lo que vales.",
+  "No tienes que enfrentar todos tus miedos sola.",
+  "Quiero celebrar tus logros y acompañarte en tus procesos.",
+  "Confío en ti, incluso cuando tú tengas dudas.",
+  "Quiero ser apoyo, tranquilidad y compañía para ti.",
+  "Tus sueños también serán motivo de alegría para mí.",
+  "No siempre tendré las palabras correctas, pero sí estaré para ti.",
+  "Quiero verte crecer sin dejar de acompañarte.",
+  "En tus días grises, quiero recordarte toda tu luz.",
+  "Avanza sin miedo; eres capaz de cosas increíbles.",
+  "No quiero algo pasajero; quiero algo sincero contigo.",
+  "Me emociona pensar en todo lo que aún podemos vivir.",
+  "Quiero conocerte un poquito más cada día.",
+  "Ojalá este sea uno de muchos cumpleaños juntos.",
+  "Quiero caminar contigo, incluso cuando el camino sea difícil.",
+  "Lo nuestro merece paciencia, cariño y muchos momentos bonitos.",
+  "No sé qué traerá el futuro, pero me ilusiona compartirlo contigo.",
+  "Quiero seguir eligiéndote en los días bonitos y complicados.",
+  "Espero que sigamos creciendo sin dejar de caminar juntos.",
+  "Contigo no busco algo perfecto, sino algo verdadero.",
+  "Entre todas las flores, siempre elegiría a mi Violeta.",
+  "Cada flor de este jardín guarda un poquito de mi cariño.",
+  "Llegaste a mi vida y comenzaron a florecer cosas bonitas.",
+  "Que tus sueños florezcan tan bonito como tu sonrisa.",
+  "Esta flor existe para recordarte lo especial que eres.",
+  "Incluso la flor más bonita tendría envidia de tu sonrisa.",
+  "Quiero cuidar lo nuestro como se cuida una flor.",
+  "Tú eres la flor más bonita de este pequeño jardín.",
+  "Que nunca te falten motivos para volver a florecer.",
+  "Este jardín nació pensando en tu sonrisa.",
+  "Te quiero más de lo que algunas veces sé explicar.",
+  "Qué bonito coincidir contigo en esta vida.",
+  "Me encanta poder llamarte mi princesa.",
+  "Espero hacerte sentir tan especial como eres para mí.",
+  "Tu felicidad también provoca una sonrisa en mí.",
+  "Gracias por cada momento bonito que hemos compartido.",
+  "No soy muy cursi, pero por ti hago el intento, jaja.",
+  "Tenerte en mi vida es un regalo que también quiero celebrar.",
 ];
 
+const flowerMessages: FlowerMessage[] = flowerMessageBodies.map((body) => ({
+  title: "Una flor para ti",
+  body,
+}));
+
 const colors = {
-  skyTop: { r: 78, g: 66, b: 157 },
-  skyMid: { r: 236, g: 93, b: 119 },
-  skyGlow: { r: 255, g: 174, b: 75 },
-  skyBottom: { r: 255, g: 221, b: 132 },
-  farHill: 0x755fa5,
-  nearHill: 0x3f8b57,
-  grass: 0x2f7f3e,
-  grassLight: 0x57a948,
-  grassDark: 0x174f2e,
-  path: 0xc58a48,
-  pathLight: 0xe7b76b,
+  skyTop: { r: 13, g: 27, b: 62 },
+  skyMid: { r: 26, g: 42, b: 92 },
+  skyGlow: { r: 61, g: 58, b: 107 },
+  skyBottom: { r: 90, g: 74, b: 122 },
+  farHill: 0x2d3f62,
+  nearHill: 0x1f3a2e,
+  grass: 0x1f5d32,
+  grassLight: 0x2f7b45,
+  grassDark: 0x0f3723,
+  path: 0x7c5b3b,
+  pathLight: 0xb88a56,
   houseWall: 0xf4c985,
   houseShade: 0xb87647,
   roof: 0x8c315b,
-  roofLight: 0xc04a73,
-  trunk: 0x5c321d,
-  trunkLight: 0xa45725,
-  leafDark: 0x123f21,
-  leaf: 0x2f752e,
-  leafLight: 0x74a832,
+  roofLight: 0xd06695,
+  trunk: 0x3d2418,
+  trunkLight: 0x7a4a28,
+  leafDark: 0x082415,
+  leaf: 0x174b28,
+  leafLight: 0x3f7628,
   flowerPink: 0xf25c83,
   flowerPurple: 0x7d48d8,
   flowerYellow: 0xffc43d,
@@ -182,6 +187,8 @@ const colors = {
 
 export function GardenScene() {
   const canvasRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const musicStartedRef = useRef(false);
   const phaseRef = useRef<GardenPhase>("preloading");
   const tickerRef = useRef<(() => void) | null>(null);
   const [phase, setPhase] = useState<GardenPhase>("preloading");
@@ -192,6 +199,46 @@ export function GardenScene() {
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
+
+  const startBackgroundMusic = () => {
+    const audio = audioRef.current;
+    if (!audio || musicStartedRef.current) return;
+
+    musicStartedRef.current = true;
+    audio.volume = 0;
+    audio.loop = true;
+
+    const fadeIn = () => {
+      const targetVolume = 0.34;
+      const startedAt = performance.now();
+      const duration = 5200;
+
+      const fade = () => {
+        const progress = clamp((performance.now() - startedAt) / duration);
+        audio.volume = targetVolume * easeOutCubic(progress);
+        if (progress < 1) window.requestAnimationFrame(fade);
+      };
+
+      window.requestAnimationFrame(fade);
+    };
+
+    void audio.play().then(fadeIn).catch(() => {
+      musicStartedRef.current = false;
+    });
+  };
+
+  useEffect(() => {
+    startBackgroundMusic();
+
+    const unlockMusic = () => startBackgroundMusic();
+    window.addEventListener("pointerdown", unlockMusic, { once: true });
+    window.addEventListener("keydown", unlockMusic, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", unlockMusic);
+      window.removeEventListener("keydown", unlockMusic);
+    };
+  }, []);
 
   useEffect(() => {
     if (phase !== "revealing") return;
@@ -259,7 +306,7 @@ export function GardenScene() {
         });
 
         const parts = drawSeedAndFlower(stage, w * 0.5, groundY + h * 0.02, min);
-        const prompt = drawPrompt(stage, w / 2, h * 0.9, "");
+        const prompt = drawPrompt(stage, w / 2, h * 0.84, "");
 
         parts.seed.eventMode = "static";
         parts.seed.cursor = "pointer";
@@ -293,7 +340,7 @@ export function GardenScene() {
           parts.seed.y = Math.sin(t * 0.002) * 5;
           parts.glow.alpha = 0.34 + Math.sin(t * 0.003) * 0.16;
           prompt.alpha = 0.62 + Math.sin(t * 0.003) * 0.28;
-          prompt.y = h * 0.9 + Math.sin(t * 0.002) * 3;
+          prompt.y = h * 0.84 + Math.sin(t * 0.002) * 3;
 
           if (phaseRef.current === "bloomed" || phaseRef.current === "letter") {
             parts.root.rotation = Math.sin(t * 0.0011) * 0.025;
@@ -351,7 +398,12 @@ export function GardenScene() {
   }, []);
 
   return (
-    <>
+    <div
+      className="fixed inset-0"
+      onPointerDownCapture={startBackgroundMusic}
+      onKeyDownCapture={startBackgroundMusic}
+    >
+      <audio ref={audioRef} src="/music/until-i-found-you.mp3" preload="auto" />
       <div ref={canvasRef} className="fixed inset-0 h-full w-full" />
       {showParticles && <Particles />}
       <AnimatePresence>
@@ -374,7 +426,7 @@ export function GardenScene() {
           />
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
 
@@ -416,9 +468,10 @@ function drawStorybookLandscape(parent: Container, w: number, h: number, groundY
   ]);
   parent.addChild(sky);
 
-  drawSunset(sky, w * 0.48, groundY - h * 0.13, Math.min(w, h) * 0.075);
-  drawCloud(parent, w * 0.18, h * 0.18, Math.min(w, h) * 0.08, 0xffa766, 0.5);
-  drawCloud(parent, w * 0.83, h * 0.14, Math.min(w, h) * 0.1, 0xffa76d, 0.68);
+  drawMoon(sky, w * 0.43, h * 0.18, Math.min(w, h) * 0.065);
+  drawStars(parent, w, h, groundY);
+  drawCloud(parent, w * 0.18, h * 0.18, Math.min(w, h) * 0.08, 0x7b78a8, 0.34);
+  drawCloud(parent, w * 0.83, h * 0.14, Math.min(w, h) * 0.1, 0x9a84b8, 0.32);
   drawDistantHills(parent, w, h, groundY);
   drawFence(parent, w, groundY + h * 0.035, Math.min(w, h));
   drawGround(parent, w, h, groundY);
@@ -431,10 +484,10 @@ function drawStorybookLandscape(parent: Container, w: number, h: number, groundY
 function drawGround(parent: Container, w: number, h: number, groundY: number) {
   const ground = new Graphics();
   ground.rect(0, groundY, w, h - groundY).fill({ color: colors.grass });
-  ground.rect(0, groundY, w, h * 0.08).fill({ color: colors.grassLight, alpha: 0.42 });
-  ground.ellipse(w * 0.15, groundY + h * 0.22, w * 0.22, h * 0.08).fill({ color: colors.grassDark, alpha: 0.16 });
-  ground.ellipse(w * 0.72, groundY + h * 0.27, w * 0.28, h * 0.09).fill({ color: 0x123f25, alpha: 0.16 });
-  ground.ellipse(w * 0.5, groundY + h * 0.12, w * 0.16, h * 0.05).fill({ color: 0x82bd47, alpha: 0.12 });
+  ground.rect(0, groundY, w, h * 0.08).fill({ color: colors.grassLight, alpha: 0.28 });
+  ground.ellipse(w * 0.15, groundY + h * 0.22, w * 0.22, h * 0.08).fill({ color: colors.grassDark, alpha: 0.24 });
+  ground.ellipse(w * 0.72, groundY + h * 0.27, w * 0.28, h * 0.09).fill({ color: 0x071f17, alpha: 0.22 });
+  ground.ellipse(w * 0.5, groundY + h * 0.12, w * 0.16, h * 0.05).fill({ color: 0x5c8d48, alpha: 0.08 });
   parent.addChild(ground);
 
   const ambient = new Container();
@@ -447,7 +500,7 @@ function drawGround(parent: Container, w: number, h: number, groundY: number) {
     const y = groundY + h * (0.03 + ((i * 0.113) % 0.36));
     blade.moveTo(x, y);
     blade.quadraticCurveTo(x + ((i % 2) ? 7 : -7), y - 18, x + ((i % 2) ? 11 : -11), y - 28);
-    blade.stroke({ color: i % 3 === 0 ? 0x80c85a : 0x3f9848, width: 2, alpha: 0.48 });
+    blade.stroke({ color: i % 3 === 0 ? 0x6bae5a : 0x2e7a43, width: 2, alpha: 0.36 });
     ambient.addChild(blade);
   }
 
@@ -455,7 +508,7 @@ function drawGround(parent: Container, w: number, h: number, groundY: number) {
     const speck = new Graphics();
     const x = w * ((i * 0.113 + 0.021) % 1);
     const y = groundY + h * (0.02 + ((i * 0.071) % 0.38));
-    const color = [0x78c95a, 0x255f35, 0xffd25d, 0xf6e7a4][i % 4];
+    const color = [0x5ca85a, 0x1e5d38, 0xffd25d, 0xf6e7a4][i % 4];
     speck.circle(x, y, 1.2 + (i % 3) * 0.55).fill({ color, alpha: i % 4 === 3 ? 0.28 : 0.36 });
     ambient.addChild(speck);
   }
@@ -639,6 +692,7 @@ function drawHouse(parent: Container, x: number, y: number, s: number) {
   const house = new Graphics();
   house.roundRect(-s * 0.45, -s * 0.56, s * 0.9, s * 0.56, 10).fill({ color: colors.houseWall });
   house.roundRect(-s * 0.36, -s * 0.5, s * 0.72, s * 0.45, 8).fill({ color: 0xffdc9e, alpha: 0.55 });
+  house.stroke({ color: 0x2b1830, width: Math.max(2.5, s * 0.022), alpha: 0.42 });
   house.moveTo(-s * 0.56, -s * 0.56);
   house.lineTo(0, -s * 0.98);
   house.lineTo(s * 0.56, -s * 0.56);
@@ -662,8 +716,12 @@ function drawHouse(parent: Container, x: number, y: number, s: number) {
   }
   house.roundRect(-s * 0.09, -s * 0.28, s * 0.18, s * 0.28, 9).fill({ color: 0x7b4329 });
   house.circle(0.04 * s, -s * 0.14, 3).fill({ color: 0xffd05c });
+  house.roundRect(-s * 0.34, -s * 0.44, s * 0.21, s * 0.19, 6).fill({ color: 0xffd966, alpha: 0.28 });
+  house.roundRect(s * 0.13, -s * 0.44, s * 0.21, s * 0.19, 6).fill({ color: 0xffd966, alpha: 0.28 });
   house.roundRect(-s * 0.32, -s * 0.42, s * 0.17, s * 0.15, 5).fill({ color: 0xffdc70 });
   house.roundRect(s * 0.15, -s * 0.42, s * 0.17, s * 0.15, 5).fill({ color: 0xffdc70 });
+  house.roundRect(-s * 0.29, -s * 0.39, s * 0.11, s * 0.09, 4).fill({ color: 0xfff0a6, alpha: 0.62 });
+  house.roundRect(s * 0.18, -s * 0.39, s * 0.11, s * 0.09, 4).fill({ color: 0xfff0a6, alpha: 0.62 });
   house.stroke({ color: colors.houseShade, width: 3, alpha: 0.55 });
   hotspot.addChild(house);
 
@@ -698,6 +756,18 @@ function drawTinyVines(parent: Container, x: number, y: number, s: number) {
 }
 
 function drawInteractiveFlowers(parent: Container, w: number, h: number, groundY: number, onMessage: (message: FlowerMessage) => void) {
+  const recentMessages: number[] = [];
+  const pickMessage = (seed: number) => {
+    const available = flowerMessages
+      .map((_, index) => index)
+      .filter((index) => !recentMessages.includes(index));
+    const pool = available.length > 0 ? available : flowerMessages.map((_, index) => index);
+    const picked = pool[Math.floor(seededUnit(seed + recentMessages.length, 19) * pool.length)];
+    recentMessages.push(picked);
+    if (recentMessages.length > 12) recentMessages.shift();
+    return flowerMessages[picked];
+  };
+
   const positions = [
     { x: 0.08, y: 0.29, s: 1.08, color: colors.flowerPink, type: "rose" as GardenFlowerType },
     { x: 0.13, y: 0.34, s: 0.9, color: 0xff7a9b, type: "rose" as GardenFlowerType },
@@ -721,14 +791,14 @@ function drawInteractiveFlowers(parent: Container, w: number, h: number, groundY
   ];
 
   positions.forEach((item, index) => {
-    const flower = drawGardenFlower(parent, w * item.x, groundY + h * item.y, Math.min(w, h) * 0.065 * item.s, item.color, item.type);
+    const flower = drawGardenFlower(parent, w * item.x, groundY + h * item.y, Math.min(w, h) * 0.085 * item.s, item.color, item.type);
     flower.eventMode = "static";
     flower.cursor = "pointer";
-    flower.hitArea = new Rectangle(-40, -88, 80, 100);
+    flower.hitArea = new Rectangle(-62, -126, 124, 146);
     let lastTap = 0;
     flower.on("pointertap", () => {
       const now = performance.now();
-      if (now - lastTap < 430) onMessage(flowerMessages[index % flowerMessages.length]);
+      if (now - lastTap < 560) onMessage(pickMessage(index * 37 + Math.floor(now / 1000)));
       lastTap = now;
     });
   });
@@ -743,9 +813,14 @@ function drawGardenFlower(parent: Container, x: number, y: number, s: number, pe
   const stem = new Graphics();
   stem.moveTo(0, 0);
   stem.quadraticCurveTo(-s * 0.12, -s * 0.48, 0, -s * 0.95);
-  stem.stroke({ color: 0x2e8b43, width: Math.max(3, s * 0.09) });
-  stem.ellipse(-s * 0.22, -s * 0.36, s * 0.24, s * 0.1).fill({ color: 0x52a94f });
-  stem.ellipse(s * 0.2, -s * 0.55, s * 0.24, s * 0.1).fill({ color: 0x6fc15b });
+  stem.stroke({ color: 0x1c5d2d, width: Math.max(5, s * 0.14), alpha: 0.88, cap: "round" });
+  stem.moveTo(0, 0);
+  stem.quadraticCurveTo(-s * 0.12, -s * 0.48, 0, -s * 0.95);
+  stem.stroke({ color: 0x4eb65a, width: Math.max(3, s * 0.08), alpha: 0.95, cap: "round" });
+  stem.ellipse(-s * 0.28, -s * 0.34, s * 0.3, s * 0.12).fill({ color: 0x52a94f });
+  stem.ellipse(-s * 0.34, -s * 0.37, s * 0.18, s * 0.045).fill({ color: 0xa3df7a, alpha: 0.28 });
+  stem.ellipse(s * 0.24, -s * 0.55, s * 0.3, s * 0.12).fill({ color: 0x6fc15b });
+  stem.ellipse(s * 0.15, -s * 0.58, s * 0.17, s * 0.045).fill({ color: 0xd2f199, alpha: 0.24 });
   flower.addChild(stem);
 
   const head = new Container();
@@ -761,14 +836,21 @@ function drawGardenFlower(parent: Container, x: number, y: number, s: number, pe
 }
 
 function drawDaisyHead(parent: Container, s: number, petalColor: number) {
+  const outline = new Graphics();
   for (let i = 0; i < 9; i++) {
     const petal = new Graphics();
+    petal.ellipse(0, -s * 0.32, s * 0.17, s * 0.36).fill({ color: 0x6b3f22, alpha: 0.16 });
     petal.ellipse(0, -s * 0.32, s * 0.15, s * 0.34).fill({ color: petalColor });
+    petal.ellipse(-s * 0.04, -s * 0.38, s * 0.045, s * 0.16).fill({ color: 0xffffff, alpha: 0.26 });
+    petal.stroke({ color: 0x7a4536, width: Math.max(1.5, s * 0.035), alpha: 0.18 });
     petal.rotation = (Math.PI * 2 * i) / 9;
     parent.addChild(petal);
   }
+  outline.circle(0, 0, s * 0.52).stroke({ color: 0x3d2419, width: Math.max(1.2, s * 0.025), alpha: 0.12 });
+  parent.addChild(outline);
   const center = new Graphics();
   center.circle(0, 0, s * 0.2).fill({ color: 0xffb72f });
+  center.circle(0, 0, s * 0.12).fill({ color: 0xc97816, alpha: 0.32 });
   center.circle(-s * 0.05, -s * 0.05, s * 0.06).fill({ color: 0xffe18f, alpha: 0.8 });
   parent.addChild(center);
 }
@@ -777,11 +859,14 @@ function drawSunflowerHead(parent: Container, s: number, petalColor: number) {
   for (let i = 0; i < 14; i++) {
     const petal = new Graphics();
     petal.ellipse(0, -s * 0.32, s * 0.12, s * 0.32).fill({ color: petalColor });
+    petal.ellipse(-s * 0.025, -s * 0.38, s * 0.035, s * 0.13).fill({ color: 0xfff0a6, alpha: 0.28 });
+    petal.stroke({ color: 0xa45d13, width: Math.max(1.2, s * 0.03), alpha: 0.22 });
     petal.rotation = (Math.PI * 2 * i) / 14;
     parent.addChild(petal);
   }
   const center = new Graphics();
   center.circle(0, 0, s * 0.25).fill({ color: 0x5b321d });
+  center.circle(-s * 0.04, -s * 0.05, s * 0.11).fill({ color: 0x8c5b2e, alpha: 0.55 });
   for (let i = 0; i < 12; i++) {
     center.circle(Math.cos(i) * s * 0.1, Math.sin(i * 1.7) * s * 0.1, s * 0.025).fill({ color: 0x8c5b2e, alpha: 0.8 });
   }
@@ -795,14 +880,21 @@ function drawTulipHead(parent: Container, s: number, petalColor: number) {
   cup.bezierCurveTo(s * 0.12, -s * 0.62, s * 0.36, -s * 0.48, s * 0.34, -s * 0.1);
   cup.bezierCurveTo(s * 0.24, s * 0.22, -s * 0.24, s * 0.22, -s * 0.34, -s * 0.1);
   cup.fill({ color: petalColor });
-  cup.stroke({ color: 0x7d2d4a, width: Math.max(1.5, s * 0.04), alpha: 0.35 });
+  cup.stroke({ color: 0x4f253b, width: Math.max(2, s * 0.06), alpha: 0.42 });
   cup.ellipse(0, -s * 0.08, s * 0.16, s * 0.26).fill({ color: 0xffb1c5, alpha: 0.28 });
+  cup.moveTo(-s * 0.18, -s * 0.04);
+  cup.quadraticCurveTo(-s * 0.22, -s * 0.28, -s * 0.05, -s * 0.43);
+  cup.stroke({ color: 0xffffff, width: Math.max(1.2, s * 0.03), alpha: 0.22, cap: "round" });
+  cup.moveTo(s * 0.12, -s * 0.02);
+  cup.quadraticCurveTo(s * 0.18, -s * 0.25, s * 0.08, -s * 0.42);
+  cup.stroke({ color: 0x4f253b, width: Math.max(1, s * 0.02), alpha: 0.2, cap: "round" });
   parent.addChild(cup);
 }
 
 function drawRoseHead(parent: Container, s: number, petalColor: number) {
   const rose = new Graphics();
   rose.circle(0, 0, s * 0.34).fill({ color: 0x8f1f43, alpha: 0.9 });
+  rose.circle(-s * 0.08, -s * 0.1, s * 0.22).fill({ color: 0xff9fb8, alpha: 0.2 });
   for (let i = 0; i < 7; i++) {
     rose.ellipse(
       Math.cos(i * 1.7) * s * 0.08,
@@ -812,6 +904,7 @@ function drawRoseHead(parent: Container, s: number, petalColor: number) {
     ).fill({ color: i % 2 ? petalColor : 0xff8da8, alpha: 0.92 });
     rose.rotation += 0.08;
   }
+  rose.stroke({ color: 0x5c1c32, width: Math.max(1.5, s * 0.035), alpha: 0.28 });
   rose.circle(0, 0, s * 0.08).fill({ color: 0xffc1cc });
   parent.addChild(rose);
 }
@@ -835,19 +928,35 @@ function drawSeedAndFlower(parent: Container, x: number, y: number, sizeBase: nu
   root.addChild(stem);
 
   const leafLeft = new Graphics();
-  leafLeft.ellipse(-38, -92, 36, 17).fill({ color: 0x65ba54 });
-  leafLeft.rotation = -0.42;
+  leafLeft.x = -4;
+  leafLeft.y = -78;
+  leafLeft.moveTo(0, 0);
+  leafLeft.bezierCurveTo(-34, -31, -78, -42, -104, -10);
+  leafLeft.bezierCurveTo(-70, 8, -28, 13, 0, 0);
+  leafLeft.fill({ color: 0x4e982c });
+  leafLeft.stroke({ color: 0x102b0f, width: 7, alpha: 0.78 });
+  leafLeft.moveTo(-14, -5);
+  leafLeft.quadraticCurveTo(-48, -18, -86, -11);
+  leafLeft.stroke({ color: 0x102b0f, width: 4, alpha: 0.66, cap: "round" });
   leafLeft.scale.set(0);
   root.addChild(leafLeft);
 
   const leafRight = new Graphics();
-  leafRight.ellipse(38, -126, 38, 18).fill({ color: 0x78ca5f });
-  leafRight.rotation = 0.42;
+  leafRight.x = 5;
+  leafRight.y = -112;
+  leafRight.moveTo(0, 0);
+  leafRight.bezierCurveTo(35, -48, 87, -65, 126, -29);
+  leafRight.bezierCurveTo(91, 0, 38, 13, 0, 0);
+  leafRight.fill({ color: 0x5fa832 });
+  leafRight.stroke({ color: 0x102b0f, width: 7, alpha: 0.78 });
+  leafRight.moveTo(15, -5);
+  leafRight.quadraticCurveTo(56, -32, 105, -30);
+  leafRight.stroke({ color: 0x102b0f, width: 4, alpha: 0.66, cap: "round" });
   leafRight.scale.set(0);
   root.addChild(leafRight);
 
   const flower = new Container();
-  flower.y = -193;
+  flower.y = -188;
   flower.alpha = 0;
   flower.scale.set(0);
   root.addChild(flower);
@@ -877,59 +986,51 @@ function drawSeedAndFlower(parent: Container, x: number, y: number, sizeBase: nu
 
 function drawMainTulip(parent: Container, shine: Graphics) {
   const shadow = new Graphics();
-  shadow.ellipse(0, 18, 58, 15).fill({ color: 0x35155f, alpha: 0.24 });
+  shadow.ellipse(0, 18, 48, 12).fill({ color: 0x241037, alpha: 0.24 });
   parent.addChild(shadow);
 
-  const backPetals = new Graphics();
-  backPetals.moveTo(-52, 6);
-  backPetals.bezierCurveTo(-70, -46, -39, -90, -7, -48);
-  backPetals.bezierCurveTo(-1, -18, -20, 8, -52, 6);
-  backPetals.fill({ color: 0x7b45d9 });
-  backPetals.stroke({ color: 0x4d2691, width: 5, alpha: 0.82 });
+  const outline = 0x140716;
+  const leftPetal = new Graphics();
+  leftPetal.moveTo(-4, 24);
+  leftPetal.bezierCurveTo(-40, 18, -58, -28, -40, -82);
+  leftPetal.bezierCurveTo(-14, -76, -4, -39, -4, 24);
+  leftPetal.fill({ color: 0x8737be });
+  leftPetal.stroke({ color: outline, width: 7, alpha: 0.92, join: "round", cap: "round" });
+  parent.addChild(leftPetal);
 
-  backPetals.moveTo(52, 6);
-  backPetals.bezierCurveTo(70, -46, 39, -90, 7, -48);
-  backPetals.bezierCurveTo(1, -18, 20, 8, 52, 6);
-  backPetals.fill({ color: 0x8d58ee });
-  backPetals.stroke({ color: 0x4d2691, width: 5, alpha: 0.82 });
-  parent.addChild(backPetals);
-
-  const cup = new Graphics();
-  cup.moveTo(-42, -2);
-  cup.bezierCurveTo(-48, -42, -24, -88, 0, -42);
-  cup.bezierCurveTo(24, -88, 48, -42, 42, -2);
-  cup.bezierCurveTo(31, 34, -31, 34, -42, -2);
-  cup.fill({ color: 0x9b63ff });
-  cup.stroke({ color: 0x53299d, width: 6, alpha: 0.9 });
-  parent.addChild(cup);
+  const rightPetal = new Graphics();
+  rightPetal.moveTo(4, 24);
+  rightPetal.bezierCurveTo(30, -38, 58, -70, 78, -58);
+  rightPetal.bezierCurveTo(78, -8, 46, 23, 4, 24);
+  rightPetal.fill({ color: 0x9b48d7 });
+  rightPetal.stroke({ color: outline, width: 7, alpha: 0.92, join: "round", cap: "round" });
+  parent.addChild(rightPetal);
 
   const centerPetal = new Graphics();
-  centerPetal.moveTo(0, 24);
-  centerPetal.bezierCurveTo(-20, -8, -17, -61, 0, -96);
-  centerPetal.bezierCurveTo(19, -61, 20, -8, 0, 24);
-  centerPetal.fill({ color: 0xd8c3ff });
-  centerPetal.stroke({ color: 0x6432b5, width: 5, alpha: 0.72 });
+  centerPetal.moveTo(0, 26);
+  centerPetal.bezierCurveTo(-19, -14, -12, -69, 15, -98);
+  centerPetal.bezierCurveTo(44, -67, 40, -12, 0, 26);
+  centerPetal.fill({ color: 0xcf64f0 });
+  centerPetal.stroke({ color: outline, width: 7, alpha: 0.92, join: "round", cap: "round" });
   parent.addChild(centerPetal);
 
-  const frontPetals = new Graphics();
-  frontPetals.moveTo(-36, 14);
-  frontPetals.bezierCurveTo(-36, -17, -23, -51, -5, -31);
-  frontPetals.bezierCurveTo(-4, -4, -12, 12, -36, 14);
-  frontPetals.fill({ color: 0x7d48d8, alpha: 0.94 });
+  const frontCup = new Graphics();
+  frontCup.moveTo(-39, -2);
+  frontCup.bezierCurveTo(-27, 27, 28, 35, 54, -18);
+  frontCup.bezierCurveTo(28, -4, -6, 3, -39, -2);
+  frontCup.fill({ color: 0x7726a6 });
+  frontCup.stroke({ color: outline, width: 7, alpha: 0.92, join: "round", cap: "round" });
+  parent.addChild(frontCup);
 
-  frontPetals.moveTo(36, 14);
-  frontPetals.bezierCurveTo(36, -17, 23, -51, 5, -31);
-  frontPetals.bezierCurveTo(4, -4, 12, 12, 36, 14);
-  frontPetals.fill({ color: 0x8654e8, alpha: 0.94 });
-  parent.addChild(frontPetals);
-
-  shine.moveTo(-18, 4);
-  shine.bezierCurveTo(-24, -24, -15, -56, -2, -72);
-  shine.stroke({ color: 0xffffff, width: 5, alpha: 0.22, cap: "round" });
-  shine.moveTo(17, 2);
-  shine.bezierCurveTo(25, -24, 16, -52, 6, -66);
-  shine.stroke({ color: 0xffffff, width: 4, alpha: 0.16, cap: "round" });
-  shine.ellipse(-9, -40, 8, 22).fill({ color: 0xf0e4ff, alpha: 0.16 });
+  shine.moveTo(-27, -36);
+  shine.bezierCurveTo(-34, -55, -29, -69, -20, -75);
+  shine.stroke({ color: 0xffffff, width: 6, alpha: 0.18, cap: "round" });
+  shine.moveTo(11, -70);
+  shine.bezierCurveTo(20, -48, 18, -27, 5, -9);
+  shine.stroke({ color: 0xffffff, width: 6, alpha: 0.22, cap: "round" });
+  shine.moveTo(42, -37);
+  shine.bezierCurveTo(55, -35, 62, -25, 61, -13);
+  shine.stroke({ color: 0xffffff, width: 5, alpha: 0.14, cap: "round" });
 }
 
 function animateBloom(parts: BloomParts, elapsed: number) {
@@ -966,10 +1067,29 @@ function drawSeedHalf(g: Graphics, direction: -1 | 1) {
   g.ellipse(direction * 16, -38, 10, 28).fill({ color: colors.seedLight, alpha: 0.34 });
 }
 
-function drawSunset(parent: Graphics, x: number, y: number, r: number) {
-  parent.circle(x, y, r * 3.2).fill({ color: 0xffb647, alpha: 0.18 });
-  parent.circle(x, y, r * 1.65).fill({ color: 0xffa338, alpha: 0.2 });
-  parent.circle(x, y, r).fill({ color: 0xfff0a4 });
+function drawMoon(parent: Graphics, x: number, y: number, r: number) {
+  parent.circle(x, y, r * 3.8).fill({ color: 0xffe8a9, alpha: 0.12 });
+  parent.circle(x, y, r * 2.1).fill({ color: 0xffe0a3, alpha: 0.18 });
+  parent.circle(x, y, r).fill({ color: 0xfff1bd });
+  parent.circle(x + r * 0.36, y - r * 0.12, r * 0.92).fill({ color: rgbToHex(colors.skyGlow), alpha: 0.95 });
+}
+
+function drawStars(parent: Container, w: number, h: number, groundY: number) {
+  const stars = new Container();
+  stars.label = "ambient";
+  parent.addChild(stars);
+
+  for (let i = 0; i < 38; i++) {
+    const x = w * (0.04 + ((i * 0.173) % 0.92));
+    const y = h * (0.05 + ((i * 0.097) % 0.43));
+    if (y > groundY - h * 0.08) continue;
+
+    const star = new Graphics();
+    const size = 1.2 + (i % 4) * 0.55;
+    star.circle(x, y, size).fill({ color: 0xffe7a3, alpha: 0.64 });
+    star.circle(x, y, size * 3.4).fill({ color: 0xffd25d, alpha: 0.05 });
+    stars.addChild(star);
+  }
 }
 
 function drawCloud(parent: Container, x: number, y: number, s: number, color: number, alpha: number) {
@@ -1027,7 +1147,7 @@ function drawFlowerArch(parent: Container, x: number, y: number, s: number) {
   arch.roundRect(x - s * 0.25, y - s * 0.02, s * 0.5, s * 0.25, 5).fill({ color: 0x8f5b30 });
   parent.addChild(arch);
 
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 28; i++) {
     const t = i / 17;
     const angle = Math.PI * (1 - t);
     const px = x + Math.cos(angle) * s * 0.45;
@@ -1051,8 +1171,8 @@ function drawFireflies(parent: Container, w: number, h: number, groundY: number)
     dot.x = x;
     dot.y = y;
     const core = new Graphics();
-    core.circle(0, 0, 2).fill({ color: 0xffe37a, alpha: 0.9 });
-    core.circle(0, 0, 10).fill({ color: 0xffd45f, alpha: 0.12 });
+    core.circle(0, 0, 2.2).fill({ color: 0xffe7a3, alpha: 0.94 });
+    core.circle(0, 0, 13).fill({ color: 0xffd45f, alpha: 0.16 });
     dot.addChild(core);
     fireflies.addChild(dot);
     items.push({
@@ -1211,7 +1331,15 @@ function animatePondFish(items: PondFish[], t: number) {
   });
 }
 
-function drawPrompt(parent: Container, x: number, y: number, label: string) {
+function drawPrompt(parent: Container, x: number, y: number, label: string): Container & { text: string } {
+  const prompt = new Container();
+  prompt.x = x;
+  prompt.y = y;
+  parent.addChild(prompt);
+
+  const bg = new Graphics();
+  prompt.addChild(bg);
+
   const text = new Text({
     text: label,
     style: new TextStyle({
@@ -1219,16 +1347,42 @@ function drawPrompt(parent: Container, x: number, y: number, label: string) {
       fill: 0xfff4c6,
       fontFamily: "'Segoe UI', Arial, sans-serif",
       fontSize: 21,
-      fontWeight: "700",
+      fontWeight: "800",
       letterSpacing: 0,
-      dropShadow: { color: 0x3b2115, alpha: 0.55, blur: 5, distance: 0 },
+      dropShadow: { color: 0x07100d, alpha: 0.8, blur: 7, distance: 0 },
     }),
   });
   text.anchor.set(0.5);
-  text.x = x;
-  text.y = y;
-  parent.addChild(text);
-  return text;
+  prompt.addChild(text);
+
+  const redrawBackground = () => {
+    bg.clear();
+    if (!text.text) return;
+    const width = text.width + 34;
+    const height = text.height + 18;
+    bg.roundRect(-width / 2, -height / 2, width, height, height / 2).fill({
+      color: 0x061316,
+      alpha: 0.74,
+    });
+    bg.roundRect(-width / 2, -height / 2, width, height, height / 2).stroke({
+      color: 0xffe0a3,
+      width: 2,
+      alpha: 0.42,
+    });
+  };
+
+  redrawBackground();
+  Object.defineProperty(prompt, "text", {
+    get() {
+      return text.text;
+    },
+    set(value: string) {
+      text.text = value;
+      redrawBackground();
+    },
+  });
+
+  return prompt as Container & { text: string };
 }
 
 function swayByName(parent: Container, name: string, t: number, speed: number, amount: number) {
@@ -1259,6 +1413,11 @@ function lerpColor(a: { r: number; g: number; b: number }, b: { r: number; g: nu
 
 function rgbToHex(c: { r: number; g: number; b: number }) {
   return (c.r << 16) | (c.g << 8) | c.b;
+}
+
+function seededUnit(index: number, salt: number) {
+  const value = Math.sin(index * 127.1 + salt * 311.7) * 43758.5453;
+  return value - Math.floor(value);
 }
 
 function clamp(value: number) {

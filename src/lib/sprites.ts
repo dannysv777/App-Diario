@@ -32,6 +32,30 @@ const SPRITE_LIST: SpriteManifest[] = [
 ];
 
 const loadedTextures = new Map<string, Texture>();
+const LOAD_TIMEOUT_MS = 2500;
+
+function preloadImage(path: string) {
+  return new Promise<void>((resolve, reject) => {
+    const image = new Image();
+    const timeout = window.setTimeout(() => {
+      image.onload = null;
+      image.onerror = null;
+      reject(new Error("timeout"));
+    }, LOAD_TIMEOUT_MS);
+
+    image.onload = () => {
+      window.clearTimeout(timeout);
+      resolve();
+    };
+
+    image.onerror = () => {
+      window.clearTimeout(timeout);
+      reject(new Error("not found"));
+    };
+
+    image.src = path;
+  });
+}
 
 export async function loadSprites(
   onProgress?: (loaded: number, total: number) => void
@@ -41,10 +65,8 @@ export async function loadSprites(
 
   const loadOne = async (sprite: SpriteManifest) => {
     try {
-      const res = await fetch(sprite.path, { method: "HEAD" });
-      if (!res.ok) throw new Error("not found");
-      const texture = await Assets.load<Texture>(sprite.path);
-      loadedTextures.set(sprite.key, texture);
+      await preloadImage(sprite.path);
+      Assets.backgroundLoad(sprite.path);
     } catch {
       if (!sprite.optional) {
         console.warn(`Required sprite missing: ${sprite.path}`);
