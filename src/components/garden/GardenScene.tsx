@@ -86,80 +86,64 @@ type GardenFlowerType = "daisy" | "tulip" | "sunflower" | "rose";
 
 const flowerMessages: FlowerMessage[] = [
   {
-    title: "Feliz 19",
-    body: "Quer\u00eda ser de las primeras personas en desearte un feliz cumplea\u00f1os n\u00famero 19, lleno de salud, alegr\u00eda y momentos bonitos.",
+    title: "Feliz cumplea\u00f1os",
+    body: "Feliz cumplea\u00f1os a la mujer m\u00e1s fuerte.",
   },
   {
-    title: "Con el coraz\u00f3n",
-    body: "Tal vez no encuentre las palabras perfectas, pero cada una de ellas es sincera y nace de todo lo bonito que siento por ti.",
+    title: "Incre\u00edble",
+    body: "Hoy celebras un a\u00f1o de ser incre\u00edble.",
   },
   {
-    title: "Qu\u00e9 r\u00e1pido pasa",
-    body: "Ya son 19 a\u00f1os. Me alegra poder celebrar otro cumplea\u00f1os contigo y guardar este momento en nuestro jard\u00edn.",
+    title: "Tus metas",
+    body: "Este a\u00f1o cumplir\u00e1s cada una de tus metas.",
   },
   {
-    title: "Una sonrisa",
-    body: "Espero que cuando vuelvas a ver este detalle alg\u00fan d\u00eda, recuerdes este momento con una sonrisa.",
+    title: "Tu luz",
+    body: "El mundo es mejor con tu luz.",
   },
   {
-    title: "Nueva etapa",
-    body: "Este es tu \u00faltimo a\u00f1o con el 1 al inicio de tu edad. Lo mejor de esta nueva etapa todav\u00eda est\u00e1 por llegar.",
+    title: "Brilla siempre",
+    body: "Brilla hoy y siempre. \u00a1Feliz d\u00eda!",
   },
   {
-    title: "Sin miedo",
-    body: "Crecer puede dar miedo, pero no dejes que ese miedo sea m\u00e1s grande que tus sue\u00f1os.",
+    title: "Cada paso",
+    body: "Agradezco cada paso que te trajo aqu\u00ed.",
   },
   {
-    title: "Lo mucho que vales",
-    body: "Nunca olvides lo mucho que vales. Eres inteligente, fuerte y capaz de lograr aquello que te propongas.",
+    title: "Cosas grandes",
+    body: "Naciste para lograr cosas grandes, mi amor.",
   },
   {
-    title: "Podr\u00e1s con todo",
-    body: "Todav\u00eda quedan retos por superar, pero estoy seguro de que podr\u00e1s con cada uno de ellos.",
+    title: "Mi motor",
+    body: "Tu sonrisa es mi motor, nunca dejes de brillar.",
   },
   {
-    title: "Violeta que crece",
-    body: "Admiro la persona en la que te est\u00e1s convirtiendo: alguien que lucha, aprende y nunca deja de crecer.",
+    title: "Orgullo",
+    body: "Que este nuevo a\u00f1o te llene de orgullo.",
   },
   {
-    title: "No lo olvides",
-    body: "No dejes que nadie te haga creer que no puedes. Tienes una luz y una fuerza muy tuyas.",
+    title: "Inspiraci\u00f3n",
+    body: "Eres mi mayor inspiraci\u00f3n. \u00a1Feliz cumplea\u00f1os!",
   },
   {
-    title: "Tu sonrisa",
-    body: "Si pudiera pedir un regalo, ser\u00eda que nunca dejaras de sonre\u00edr. Tu sonrisa alegra m\u00e1s de lo que imaginas.",
+    title: "Mejor a\u00f1o",
+    body: "Hoy empieza tu mejor a\u00f1o.",
   },
   {
-    title: "Siempre apoyo",
-    body: "Quiero seguir apoy\u00e1ndote de cerca o de lejos, en tus alegr\u00edas, tus metas y tus d\u00edas dif\u00edciles.",
+    title: "Sin l\u00edmites",
+    body: "No hay meta que te quede grande.",
   },
   {
-    title: "Yo creo en ti",
-    body: "Cuando necesites que alguien crea en ti, recuerda esta flor: yo siempre creer\u00e9 en ti.",
+    title: "Conquistar",
+    body: "Estoy listo para ver c\u00f3mo conquistas este a\u00f1o.",
   },
   {
-    title: "M\u00e1s momentos",
-    body: "Le pido a Dios que nos permita compartir muchos momentos juntos y celebrar muchos cumplea\u00f1os m\u00e1s.",
+    title: "Potencial",
+    body: "Tu potencial no tiene l\u00edmites, disfr\u00fatalo.",
   },
   {
-    title: "Recuerdos bonitos",
-    body: "Ojal\u00e1 pueda seguir regal\u00e1ndote peque\u00f1os detalles, pero sobre todo muchos recuerdos bonitos.",
-  },
-  {
-    title: "Verte feliz",
-    body: "No s\u00e9 qu\u00e9 nos depare el futuro, pero s\u00ed deseo verte feliz y orgullosa de la gran mujer que eres.",
-  },
-  {
-    title: "Nunca dudes",
-    body: "Aunque alguna vez puedas dudarlo, nunca dudes del enorme cari\u00f1o y amor que siento por ti.",
-  },
-  {
-    title: "Gracias",
-    body: "Gracias por permitirme compartir un pedacito de tu vida y por hacer la m\u00eda m\u00e1s bonita desde que llegaste.",
-  },
-  {
-    title: "Princesa hermosa",
-    body: "Feliz cumplea\u00f1os, mi princesa hermosa. Que Dios bendiga tus pasos y los deseos m\u00e1s bonitos de tu coraz\u00f3n.",
+    title: "Creo en ti",
+    body: "Cree en ti como yo creo en ti.",
   },
 ];
 

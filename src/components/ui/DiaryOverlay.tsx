@@ -151,7 +151,7 @@ export function DiaryOverlay({ onClose }: DiaryOverlayProps) {
             <h2
               className="diary-cover-title mb-4 max-w-sm text-3xl font-black leading-tight sm:text-4xl"
             >
-              Nuestro &aacute;lbum de aventuras
+              &Aacute;lbum de recuerdos
             </h2>
             <p className="diary-cover-copy mb-7 max-w-sm text-sm leading-7" style={{ color: "rgba(255, 242, 200, 0.86)" }}>
               Una p&aacute;gina para cada recuerdo. Puedes dejar una foto, una frase o
