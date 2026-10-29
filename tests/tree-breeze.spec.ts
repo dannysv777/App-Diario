@@ -1,0 +1,62 @@
+import { expect, test } from "@playwright/test";
+
+test("tree wind stays bounded, synchronized and separate from existing actions", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+  page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
+  await page.goto("/propuesta");
+  const tree = page.locator(".tree-breeze");
+  await expect(tree).toHaveAttribute("data-active", "true");
+  await expect(tree.locator(".tree-firefly")).toHaveCount(8);
+  await expect(tree.locator(".tree-falling-leaf")).toHaveCount(7);
+  const times = await page.evaluate(() => [".tree-canopy", ".proposal-reeds", ".tree-shadow"].map(selector => {
+    const animation = document.querySelector(selector)!.getAnimations()[0];
+    return { start: Number(animation.startTime), duration: animation.effect!.getTiming().duration };
+  }));
+  expect(times.map(time => time.duration)).toEqual([7000, 7000, 7000]);
+  expect(Math.max(...times.map(time => time.start)) - Math.min(...times.map(time => time.start))).toBeLessThan(2);
+  const originalMask = await page.locator(".proposal-canvas").evaluate(node => (node as HTMLElement).style.maskImage);
+  expect(originalMask).toContain("data:image/png");
+  const transforms = await tree.locator(".tree-canopy").evaluate(node => getComputedStyle(node).transform);
+  await page.waitForTimeout(400);
+  expect(await tree.locator(".tree-canopy").evaluate(node => getComputedStyle(node).transform)).not.toBe(transforms);
+  const initialScroll = await page.locator(".proposal-scroll").evaluate(node => node.scrollTop);
+  await page.getByRole("button", { name: "Acariciar el árbol" }).click();
+  await expect(tree).toHaveAttribute("data-burst", "true");
+  for (let i = 0; i < 4; i++) await page.getByRole("button", { name: "Acariciar el árbol" }).click();
+  await expect(tree.locator(".tree-falling-leaf")).toHaveCount(17);
+  expect(await page.locator(".proposal-scroll").evaluate(node => node.scrollTop)).toBeCloseTo(initialScroll, 0);
+  await page.screenshot({ path: "test-results/tree-burst-portrait.png" });
+  await expect(tree).toHaveAttribute("data-burst", "false", { timeout: 2600 });
+  await expect(tree.locator(".tree-falling-leaf")).toHaveCount(7);
+  expect(await page.locator(".proposal-canvas").evaluate(node => (node as HTMLElement).style.maskImage)).toBe(originalMask);
+  await page.getByRole("button", { name: "Abrir carta del tulipán" }).click();
+  await expect(tree).toHaveAttribute("data-active", "false");
+  await expect(tree.locator("animate")).toHaveCount(0);
+  await page.getByRole("button", { name: "volver al jardin" }).click();
+  await expect(tree).toHaveAttribute("data-active", "true");
+  await page.setViewportSize({ width: 844, height: 390 });
+  await expect.poll(() => page.locator(".proposal-canvas").evaluate(node => (node as HTMLElement).style.maskImage)).not.toBe(originalMask);
+  await expect(tree).toHaveAttribute("data-active", "true");
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: "test-results/tree-landscape.png" });
+  await page.getByRole("button", { name: "Acariciar el árbol" }).click();
+  await expect(tree).toHaveAttribute("data-burst", "true");
+  expect(errors).toEqual([]);
+});
+
+test("tree respects a live reduced-motion preference", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/propuesta");
+  const tree = page.locator(".tree-breeze");
+  await expect(tree).toHaveAttribute("data-reduced", "true");
+  await expect(tree.locator("animate")).toHaveCount(0);
+  expect(await tree.locator(".tree-canopy").evaluate(node => getComputedStyle(node).animationName)).toBe("none");
+  await page.getByRole("button", { name: "Acariciar el árbol" }).click();
+  for (const leaf of await tree.locator(".tree-falling-leaf").all()) await expect(leaf).toBeHidden();
+  await expect(tree.locator(".tree-canopy-image image")).not.toHaveAttribute("filter");
+  await page.screenshot({ path: "test-results/tree-reduced-motion.png" });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await expect(tree).toHaveAttribute("data-active", "true");
+  await expect(tree.locator("animate")).toHaveCount(1);
+});
