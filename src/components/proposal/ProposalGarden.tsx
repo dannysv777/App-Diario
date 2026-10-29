@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, type Ref } from "react";
 import Link from "next/link";
 import { Application, Assets, BlurFilter, Container, Graphics, Sprite, Texture } from "pixi.js";
 import { AnimatePresence } from "framer-motion";
@@ -15,12 +15,14 @@ import { HistoricSky } from "./HistoricSky";
 import { GardenSky, SkyField, useSkyView } from "./SkyField";
 import { TreeBreeze } from "./TreeBreeze";
 import { HouseFinish } from "./HouseFinish";
+import { HouseSign } from "./HouseSign";
 import { GardenCompanion } from "./GardenCompanion";
+import { TerrainForeground } from "./TerrainForeground";
 
 type Overlay = "letter" | "diary" | "message" | null;
 const assetPaths = ["/proposal/garden-portrait.webp", "/proposal/garden-landscape.webp", "/proposal/tulip.webp"];
 
-export function ProposalGarden({ main = false, blocked = false }: { main?: boolean; blocked?: boolean }) {
+export function ProposalGarden({ main = false, blocked = false, musicControl }: { main?: boolean; blocked?: boolean; musicControl?: Ref<{ start: () => void }> }) {
   const host = useRef<HTMLDivElement>(null);
   const scroll = useRef<HTMLDivElement>(null);
   const skyView = useSkyView(scroll);
@@ -28,6 +30,8 @@ export function ProposalGarden({ main = false, blocked = false }: { main?: boole
   const [constellations, setConstellations] = useState(false);
   const audio = useRef<HTMLAudioElement>(null);
   const fadeFrame = useRef(0);
+  const parallax = useRef({ x: 0, y: 0 });
+  const musicPending = useRef(false);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [overlay, setOverlay] = useState<Overlay>(null);
   const [message, setMessage] = useState("");
@@ -84,7 +88,7 @@ export function ProposalGarden({ main = false, blocked = false }: { main?: boole
           if (disposed) return;
           app.renderer.resize(element.clientWidth, element.clientHeight);
           app.stage.removeChildren().forEach(child => child.destroy({ children: true }));
-          animate = buildIllustratedScene(app, textures);
+          animate = buildIllustratedScene(app, textures, parallax.current);
         };
         rebuild();
         app.ticker.add(ticker => {
@@ -114,11 +118,11 @@ export function ProposalGarden({ main = false, blocked = false }: { main?: boole
 
   useEffect(() => () => cancelAnimationFrame(fadeFrame.current), []);
 
-  const toggleSound = async () => {
+  const startSound = useCallback(async () => {
     const player = audio.current;
-    if (!player) return;
+    if (!player || !player.paused || musicPending.current) return;
+    musicPending.current = true;
     cancelAnimationFrame(fadeFrame.current);
-    if (sound) { player.pause(); setSound(false); return; }
     player.volume = 0;
     try {
       await player.play();
@@ -131,6 +135,12 @@ export function ProposalGarden({ main = false, blocked = false }: { main?: boole
       };
       fadeFrame.current = requestAnimationFrame(fade);
     } catch { setSound(false); }
+    finally { musicPending.current = false; }
+  }, []);
+  useImperativeHandle(musicControl, () => ({ start: () => { void startSound(); } }), [startSound]);
+  const toggleSound = () => {
+    if (sound) { cancelAnimationFrame(fadeFrame.current); audio.current?.pause(); setSound(false); }
+    else void startSound();
   };
 
   const showMessage = () => {
@@ -152,7 +162,7 @@ export function ProposalGarden({ main = false, blocked = false }: { main?: boole
 
   return (
     <main className="proposal-garden" aria-label="Nuestro jardín">
-      <audio ref={audio} src="/music/until-i-found-you.mp3" loop preload="none" />
+      <audio ref={audio} src="/music/until-i-found-you.mp3" loop preload="auto" />
       <div className="proposal-scroll" ref={scroll} inert={overlay !== null || blocked} onScroll={event => {
         const element = event.currentTarget;
         atGarden.current = element.scrollHeight - element.clientHeight - element.scrollTop < 8;
@@ -161,9 +171,12 @@ export function ProposalGarden({ main = false, blocked = false }: { main?: boole
       <div className="proposal-world" inert={overlay !== null || blocked} onPointerMove={event => {
         if (event.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         const box = event.currentTarget.getBoundingClientRect();
+        parallax.current.x = ((event.clientX - box.left) / box.width - .5) * 6;
+        parallax.current.y = ((event.clientY - box.top) / box.height - .5) * 3;
         event.currentTarget.style.setProperty("--parallax-x", `${((event.clientX - box.left) / box.width - .5) * 4}px`);
         event.currentTarget.style.setProperty("--parallax-y", `${((event.clientY - box.top) / box.height - .5) * 3}px`);
       }} onPointerLeave={event => {
+        parallax.current.x = 0; parallax.current.y = 0;
         event.currentTarget.style.setProperty("--parallax-x", "0px");
         event.currentTarget.style.setProperty("--parallax-y", "0px");
       }}>
@@ -174,6 +187,7 @@ export function ProposalGarden({ main = false, blocked = false }: { main?: boole
           <HouseFinish portrait={skyView.height >= skyView.width} />
           <Atmosphere />
           <GardenCompanion portrait={skyView.height >= skyView.width} paused={overlay !== null || blocked} />
+          <TerrainForeground portrait={skyView.height >= skyView.width} />
           <SkyField view={skyView} revealed={constellations} labelsOnly />
           <button className="proposal-sky-toggle" aria-label={constellations ? "Ocultar constelaciones del jardín" : "Mostrar constelaciones del jardín"} aria-pressed={constellations} onClick={() => setConstellations(value => !value)} />
           <button className="proposal-hotspot proposal-house" aria-label="Abrir diario" title="diario" onClick={() => setOverlay("diary")} />
@@ -188,7 +202,8 @@ export function ProposalGarden({ main = false, blocked = false }: { main?: boole
               lastTap.current = { index: -1, time: -Infinity };
             } else lastTap.current = { index, time: now };
           }} />)}
-          <p className="proposal-prompt">toca la flor o explora la casa</p>
+          <p className="proposal-prompt">Para ti</p>
+          <HouseSign />
           <nav className="proposal-tools" aria-label="Controles del jardín">
             <Link href={main ? "/anterior" : "/"} className="proposal-control" aria-label={main ? "Ver jardín anterior" : "Volver al jardín actual"} title={main ? "Ver jardín anterior" : "Volver al jardín actual"}><ArrowLeft size={20} /></Link>
             <div className="proposal-shortcuts">
@@ -212,7 +227,7 @@ export function ProposalGarden({ main = false, blocked = false }: { main?: boole
   );
 }
 
-function buildIllustratedScene(app: Application, textures: Texture[]) {
+function buildIllustratedScene(app: Application, textures: Texture[], parallax: { x: number; y: number }) {
   const w = app.screen.width;
   const h = app.screen.height;
   const portrait = h >= w;
@@ -222,6 +237,27 @@ function buildIllustratedScene(app: Application, textures: Texture[]) {
   background.width = w;
   background.height = h;
   scene.addChild(background);
+
+  // Four shallow terraces follow the lawn, leaving the pond and path open.
+  const levels = portrait ? [.53, .62, .76, .91] : [.58, .70, .84, .96];
+  const greens = [0x617b49, 0x456c45, 0x345d44, 0x214b3e];
+  const terrain = levels.map((level, index) => {
+    const band = new Container();
+    band.zIndex = index;
+    const ranges = index === 0 ? [[0, .37], [.72, 1]] : index === 1 ? [[.64, 1]] : index === 2 ? [[.05, .43], [.83, 1]] : [[0, .38], [.79, 1]];
+    for (const [left, right] of ranges) {
+      const x = w * left, end = w * right, y = h * level;
+      const drop = h * (.003 + index * .001);
+      const slope = h * (.008 + index * .002);
+      const edge = new Graphics();
+      edge.moveTo(x, y).bezierCurveTo(x + (end-x)*.35, y + slope, x + (end-x)*.7, y - slope, end, y).bezierCurveTo(x + (end-x)*.7, y - slope + drop * 3, x + (end-x)*.35, y + slope + drop * 3, x, y).closePath().fill({ color: 0x152e27, alpha: .16 });
+      edge.moveTo(x, y).bezierCurveTo(x + (end-x)*.35, y + slope, x + (end-x)*.7, y - slope, end, y).bezierCurveTo(x + (end-x)*.7, y - slope + drop, x + (end-x)*.35, y + slope + drop, x, y).closePath().fill({ color: 0x79684b, alpha: .32 });
+      edge.moveTo(x, y).bezierCurveTo(x + (end-x)*.35, y + slope - drop * 7, x + (end-x)*.7, y - slope - drop * 7, end, y).bezierCurveTo(x + (end-x)*.7, y - slope, x + (end-x)*.35, y + slope, x, y).closePath().fill({ color: greens[index], alpha: .32 });
+      band.addChild(edge);
+    }
+    scene.addChild(band);
+    return band;
+  });
 
   const tulip = new Sprite(textures[2]);
   tulip.anchor.set(.5, .96);
@@ -273,6 +309,12 @@ function buildIllustratedScene(app: Application, textures: Texture[]) {
   });
 
   const update = (time: number) => {
+    terrain.forEach((band, index) => {
+      const factor = [.15, .4, .8, 1.3][index];
+      band.x += (parallax.x * factor - band.x) * .06;
+      band.y += (parallax.y * factor - band.y) * .06;
+    });
+    grass.skew.x = Math.sin(time * Math.PI * 2 / 7000) * .012;
     tulip.rotation = Math.sin(time * .0007) * .012;
     tulip.scale.set(tulipScale * (1 + Math.sin(time * .0012) * .004));
     fish.forEach((node, index) => {

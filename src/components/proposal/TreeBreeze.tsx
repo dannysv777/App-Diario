@@ -67,7 +67,7 @@ export function TreeBreeze({ host, portrait, paused }: { host: RefObject<HTMLDiv
     const frame = requestAnimationFrame(() => {
       const epoch = document.timeline.currentTime;
       if (epoch === null) return;
-      host.current?.parentElement?.querySelectorAll(".tree-canopy, .proposal-reeds, .tree-shadow").forEach(element => {
+      host.current?.parentElement?.querySelectorAll(".tree-canopy, .proposal-reeds, .tree-shadow, .terrain-tuft").forEach(element => {
         element.getAnimations().forEach(animation => { animation.startTime = epoch; });
       });
     });

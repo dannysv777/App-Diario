@@ -10,7 +10,7 @@ export function HistoricSky({ revealed, onToggle, onReturn, view }: Props) {
   return <section className="historic-sky" aria-label="Cielo del 6 de agosto de 2007 en Huehuetenango">
     <header className="historic-sky-heading">
       <p>Huehuetenango, Guatemala</p>
-      <h1>El cielo de aquella noche</h1>
+      <h1>El cielo un día muy especial...</h1>
       <time dateTime={sky.meta.local}>6 de agosto de 2007 · 20:00</time>
     </header>
     <button className="historic-sky-map" aria-label={revealed ? "Ocultar constelaciones" : "Mostrar constelaciones"} aria-pressed={revealed} onClick={onToggle}>

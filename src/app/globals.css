@@ -1,4 +1,11 @@
 @import "tailwindcss";
+
+.welcome-skip { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 9px 23px; color: #fff0c6; border: 1px solid #a78d5c; border-bottom: 3px solid #303e29; border-radius: 4px 7px 3px 6px; background: repeating-linear-gradient(3deg, transparent 0 7px, #20342744 8px, transparent 9px 14px), #40523c; box-shadow: inset 0 1px #ead29c40, 0 4px 12px #0004; font: 600 22px/1.2 "Garden Caveat", cursive; cursor: pointer; transition: transform .2s, background-color .2s; }
+.welcome-skip > svg:first-child { color: #f3cf6f; }
+.welcome-skip:hover { background-color: #4e6448; transform: translateY(-2px); }
+.welcome-skip:active { transform: translateY(1px); }
+.welcome-skip:focus-visible { outline: 2px solid #f3d9a0; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .welcome-skip { transition: none; } }
 @import "./album.css";
 
 :root {
