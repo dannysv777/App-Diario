@@ -1,0 +1,114 @@
+.album-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background: #071c23b8;
+  backdrop-filter: blur(8px);
+  touch-action: pan-y;
+}
+.garden-controls { position: fixed; z-index: 20; bottom: max(18px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); display: flex; gap: 12px; }
+.garden-controls button { display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid #e6dfb840; border-radius: 50%; background: #102e29d9; color: #f8edc7; box-shadow: 0 3px 14px #0003; cursor: pointer; }
+.garden-controls button:hover { background: #315e58; }
+.garden-controls button:focus-visible { outline: 2px solid #ffdc89; outline-offset: 4px; }
+.album-book {
+  --ink: #354741;
+  width: min(100%, 880px);
+  height: min(90dvh, 860px);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  border: 7px solid #315e58;
+  border-left-width: 14px;
+  border-radius: 7px;
+  background: #faf8ef;
+  color: var(--ink);
+  box-shadow: -3px 0 0 #1b403c, 3px 3px 0 #bdb8a0, 6px 6px 0 #e5dfce, 0 24px 70px #0007;
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: 0;
+  outline: none;
+}
+.album-book *, .album-book *::before, .album-book *::after { box-sizing: border-box; }
+.album-book button { cursor: pointer; font: inherit; touch-action: manipulation; }
+.album-book button:disabled { opacity: .4; cursor: default; }
+.album-book :is(button, input, textarea):focus-visible { outline: 2px solid #b77734; outline-offset: 3px; }
+.album-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 24px 18px; background: repeating-linear-gradient(0deg, #ffffff04 0 1px, transparent 1px 4px), #315e58; color: #fff7dd; }
+.album-eyebrow { display: block; font: 12px/1.5 "Trebuchet MS", sans-serif; color: #d7deb7; }
+.album-header h2 { margin: 3px 0 0; font-size: 28px; font-weight: 400; line-height: 1.2; overflow-wrap: anywhere; }
+.album-icon { width: 44px; height: 44px; flex: 0 0 44px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 6px; background: transparent; color: inherit; }
+.album-icon:not(:disabled):hover { background: #7f9d8b24; }
+.album-toolbar { display: flex; align-items: center; gap: 8px; padding: 8px 18px; border-bottom: 1px solid #c8c7b3; flex-shrink: 0; }
+.album-tool, .album-save { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 12px; border: 0; border-radius: 5px; font-size: 14px !important; background: transparent; color: inherit; }
+.album-tool.active { background: #e3e9dc; color: #295347; }
+.album-backup { margin-left: auto; }
+.album-scroll { min-height: 0; overflow: auto; overscroll-behavior: contain; touch-action: pan-y; scrollbar-width: thin; background: linear-gradient(90deg, #ccc7b626, transparent 22px); }
+.album-scroll * { touch-action: pan-y; }
+.album-page { padding: 20px 38px 40px; min-width: 0; animation: album-page-in .3s ease-out both; }
+.album-page-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 18px; color: #7b8070; font-size: 12px; }
+.album-page-top > div { display: flex; }
+.album-photo { position: relative; margin: 8px auto 30px; padding: 10px 10px 24px; width: min(100%, 420px); background: #fffef9; box-shadow: 0 3px 9px #45473526; transform: rotate(-1.2deg); }
+.album-photo::before, .album-photo::after { content: ""; position: absolute; width: 64px; height: 23px; top: -9px; background: #d6a6a5a8; transform: rotate(-17deg); z-index: 1; }
+.album-photo::before { left: -7px; }
+.album-photo::after { right: -7px; transform: rotate(22deg); background: #9eafa98c; }
+.album-photo img { display: block; width: 100%; max-height: 380px; object-fit: contain; background: #f3f1e9; }
+.album-writing { margin: 0 auto; max-width: 580px; overflow-wrap: anywhere; }
+.album-writing time { display: block; margin-bottom: 8px; color: #8a7664; font: 12px/1.6 "Trebuchet MS", sans-serif; }
+.album-writing h3 { margin-bottom: 18px; font: italic 28px/1.3 Georgia, serif; color: #475e52; }
+.album-writing p { font-size: 17px; line-height: 32px; white-space: pre-wrap; user-select: text; background: repeating-linear-gradient(transparent 0 31px, #a0b6bb3d 31px 32px); padding-bottom: 16px; }
+.album-pagination { display: flex; align-items: center; justify-content: center; gap: 28px; padding: 8px 20px; margin-top: auto; border-top: 1px solid #ddd9c9; flex-shrink: 0; font-size: 13px; }
+.album-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; min-height: 380px; padding: 40px 28px; text-align: center; }
+.album-empty > svg { color: #7e9b85; }
+.album-empty > span { font-size: 12px; color: #8c7d68; }
+.album-empty h3 { max-width: 300px; font-size: 27px; font-weight: 400; line-height: 1.3; }
+.album-empty p { max-width: 320px; font-size: 15px; line-height: 1.8; color: #777a69; }
+.album-editor { max-width: 580px; padding: 28px; margin: 0 auto; }
+.album-intro { font-size: 14px; line-height: 1.8; color: #777a69; margin-bottom: 24px; }
+.album-upload { position: relative; width: 100%; min-height: 130px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; padding: 20px; border: 1px dashed #9cae99; border-radius: 4px; background: #eaf0e3; color: #57745d; cursor: pointer; overflow: hidden; }
+.album-upload img { display: block; width: 100%; max-height: 230px; object-fit: contain; }
+.album-upload input { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: pointer; }
+.album-upload:focus-within { outline: 2px solid #b77734; outline-offset: 3px; }
+.album-field { display: block; margin-top: 24px; }
+.album-field > span { display: block; margin-bottom: 8px; font: 13px/1.5 "Trebuchet MS", sans-serif; color: #6d7a68; }
+.album-field input, .album-field textarea { display: block; width: 100%; min-width: 0; padding: 12px; border: 1px solid #ccd0bf; border-radius: 4px; color: #354741; background: #fffdf6; font: 16px/1.7 Georgia, serif; user-select: text; }
+.album-field textarea { resize: vertical; min-height: 150px; }
+.album-editor-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+.album-save { background: #315e58; color: #fff7dd; padding-inline: 20px; }
+.album-save:not(:disabled):hover { background: #244c46; }
+.album-text-button { display: flex; align-items: center; gap: 6px; padding: 12px 0; border: 0; background: transparent; color: #8a665b; font-size: 13px !important; }
+.album-error { padding: 12px 20px; background: #fae7df; color: #854433; font: 14px/1.5 "Trebuchet MS", sans-serif; flex-shrink: 0; }
+.album-delete { margin-top: 24px; padding: 16px; border: 1px solid #d5b7a9; border-radius: 4px; }
+.album-delete p { font-size: 14px; margin-bottom: 8px; }
+.album-spinner { animation: album-spin 1s linear infinite; }
+@keyframes album-spin { to { transform: rotate(360deg); } }
+@keyframes album-page-in { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
+@media (max-width: 560px) {
+  .album-book { height: 94dvh; border-width: 5px; border-left-width: 10px; }
+  .album-header { padding: 16px 14px; }
+  .album-header h2 { font-size: 24px; }
+  .album-toolbar { padding: 6px 8px; gap: 2px; }
+  .album-tool { padding-inline: 10px; }
+  .album-page { padding: 12px 22px 30px; }
+  .album-writing h3 { font-size: 24px; }
+  .album-editor { padding: 22px 18px; }
+  .album-photo img { max-height: 290px; }
+}
+@media (orientation: landscape) and (max-height: 560px) {
+  .album-overlay { padding: 8px 16px; }
+  .album-book { height: calc(100dvh - 16px); }
+  .album-header { padding: 8px 18px; }
+  .album-eyebrow { display: none; }
+  .album-header h2 { font-size: 22px; }
+  .album-toolbar { padding-block: 2px; }
+  .album-pagination { padding-block: 0; }
+  .album-page { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
+  .album-page-top, .album-delete { grid-column: 1 / -1; margin: 0; }
+  .album-writing { width: 100%; }
+  .album-photo { align-self: start; }
+  .album-photo img { max-height: 240px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .album-page { animation: none; }
+}

@@ -223,7 +223,11 @@ export function LoadingScreen({ onComplete, visible }: LoadingScreenProps) {
       }}
       onClick={handleScreenTap}
       onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") handleScreenTap();
+        if (event.target !== event.currentTarget) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handleScreenTap();
+        }
       }}
     >
       <div className="welcome-vignette absolute inset-0" />
@@ -370,6 +374,17 @@ export function LoadingScreen({ onComplete, visible }: LoadingScreenProps) {
               )}
             </motion.div>
           </AnimatePresence>
+
+          {step !== "enter" && (
+            <button
+              type="button"
+              className="relative z-10 mt-3 min-h-11 shrink-0 rounded-lg border border-[#fff0a6]/30 bg-black/25 px-6 py-2 text-sm text-[#fff0a6] transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#fff0a6]"
+              aria-label="Omitir bienvenida e ir al jardin"
+              onClick={handleEnter}
+            >
+              Omitir
+            </button>
+          )}
 
           {step === "enter" && (
             <motion.button
