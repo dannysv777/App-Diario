@@ -36,6 +36,7 @@ export function GardenCompanion({ portrait, paused }: { portrait: boolean; pause
     let stop = stops[3];
     let bag: number[] = [];
     let last = -1;
+    let manual: "rest" | "sleep" | null = null;
     const place = () => { dog.style.transform = `translate(${position[0]}%, ${position[1]}%)`; };
     const action = (value: string) => { root.dataset.action = value; };
     const walkTo = (point: Point) => {
@@ -44,12 +45,32 @@ export function GardenCompanion({ portrait, paused }: { portrait: boolean; pause
       root.style.setProperty("--dog-facing", point[0] < origin[0] ? "-1" : "1");
       action("walk");
     };
+    const touch = () => {
+      if (manual) {
+        manual = null;
+        elapsed = 0;
+        returning = true;
+        walkTo(hub);
+        return;
+      }
+      manual = "rest";
+      walking = false;
+      elapsed = 0;
+      duration = 10000;
+      action("rest");
+    };
+    const touchTarget = root.querySelector<HTMLButtonElement>(".companion-touch");
+    touchTarget?.addEventListener("click", touch);
     const tick = (now: number) => {
       const active = visible && !document.hidden && !pausedRef.current && !reduced.matches;
       root.dataset.active = String(active);
       if (active) {
         elapsed += previous ? Math.min(50, now - previous) : 0;
-        if (walking) {
+        if (manual === "rest") {
+          if (elapsed >= 10000) { manual = "sleep"; elapsed = 0; action("sleep"); }
+        } else if (manual === "sleep") {
+          // The dog stays asleep until touched again.
+        } else if (walking) {
           const t = Math.min(1, elapsed / duration);
           position = [origin[0] + (destination[0] - origin[0]) * t, origin[1] + (destination[1] - origin[1]) * t];
           place();
@@ -73,7 +94,7 @@ export function GardenCompanion({ portrait, paused }: { portrait: boolean; pause
       cancelAnimationFrame(frame); previous = 0;
       root.dataset.reduced = String(reduced.matches);
       root.dataset.active = "false";
-      if (reduced.matches) { position = [...hub]; place(); action("rest"); walking = false; elapsed = 0; duration = 2600; }
+      if (reduced.matches) { manual = null; position = [...hub]; place(); action("rest"); walking = false; elapsed = 0; duration = 2600; }
       frame = requestAnimationFrame(tick);
     };
     const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; resume(); });
@@ -81,11 +102,11 @@ export function GardenCompanion({ portrait, paused }: { portrait: boolean; pause
     document.addEventListener("visibilitychange", resume);
     reduced.addEventListener("change", resume);
     place(); action("rest"); resume();
-    return () => { cancelAnimationFrame(frame); observer.disconnect(); document.removeEventListener("visibilitychange", resume); reduced.removeEventListener("change", resume); };
+    return () => { cancelAnimationFrame(frame); touchTarget?.removeEventListener("click", touch); observer.disconnect(); document.removeEventListener("visibilitychange", resume); reduced.removeEventListener("change", resume); };
   }, [portrait]);
 
-  return <div className="garden-companion" ref={layer} aria-hidden="true">
-    {(portrait ? [[33, 77], [64, 60]] : [[38, 86], [69, 76]]).map(([x, y], index) => <svg key={index} className="companion-flowers" style={{ left: `${x}%`, top: `${y}%` }} viewBox="0 0 60 50">
+  return <div className="garden-companion" ref={layer}>
+    {(portrait ? [[33, 77], [64, 60]] : [[38, 86], [69, 76]]).map(([x, y], index) => <svg key={index} aria-hidden="true" className="companion-flowers" style={{ left: `${x}%`, top: `${y}%` }} viewBox="0 0 60 50">
       <path d="M16 47Q20 30 14 18M30 48L33 11M43 47Q39 32 46 24" fill="none" stroke="#41664b" strokeWidth="2" />
       <path d="M27 45Q14 41 14 33Q26 33 27 45M35 40Q41 28 49 30Q45 41 35 40" fill="#69835a" />
       {[[14, 18], [33, 11], [46, 24]].map(([cx, cy], flower) => <g key={flower} transform={`translate(${cx} ${cy})`}>
@@ -94,7 +115,7 @@ export function GardenCompanion({ portrait, paused }: { portrait: boolean; pause
       </g>)}
     </svg>)}
     <div className="companion-position" ref={traveler}>
-      <div className="companion-dog">
+      <button type="button" className="companion-touch" aria-label="Tocar al perrito" title="Tocar al perrito"><span className="companion-dog">
         <svg viewBox="0 0 120 110" className="companion-art">
           <ellipse cx="55" cy="102" rx="35" ry="5" fill="#122c2a" opacity=".22" />
           <g className="dog-facing">
@@ -116,7 +137,7 @@ export function GardenCompanion({ portrait, paused }: { portrait: boolean; pause
             </g>
           </g>
         </svg>
-      </div>
+      </span></button>
     </div>
   </div>;
 }
