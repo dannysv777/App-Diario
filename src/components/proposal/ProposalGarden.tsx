@@ -20,7 +20,7 @@ import { GardenCompanion } from "./GardenCompanion";
 type Overlay = "letter" | "diary" | "message" | null;
 const assetPaths = ["/proposal/garden-portrait.webp", "/proposal/garden-landscape.webp", "/proposal/tulip.webp"];
 
-export function ProposalGarden() {
+export function ProposalGarden({ main = false, blocked = false }: { main?: boolean; blocked?: boolean }) {
   const host = useRef<HTMLDivElement>(null);
   const scroll = useRef<HTMLDivElement>(null);
   const skyView = useSkyView(scroll);
@@ -37,7 +37,7 @@ export function ProposalGarden() {
   const lastMessage = useRef(-1);
   const lastTap = useRef({ index: -1, time: -Infinity });
 
-  useEffect(() => { paused.current = overlay !== null; }, [overlay]);
+  useEffect(() => { paused.current = overlay !== null || blocked; }, [overlay, blocked]);
 
   useLayoutEffect(() => {
     const element = scroll.current;
@@ -153,12 +153,12 @@ export function ProposalGarden() {
   return (
     <main className="proposal-garden" aria-label="Nuestro jardín">
       <audio ref={audio} src="/music/until-i-found-you.mp3" loop preload="none" />
-      <div className="proposal-scroll" ref={scroll} inert={overlay !== null} onScroll={event => {
+      <div className="proposal-scroll" ref={scroll} inert={overlay !== null || blocked} onScroll={event => {
         const element = event.currentTarget;
         atGarden.current = element.scrollHeight - element.clientHeight - element.scrollTop < 8;
       }}>
       <HistoricSky view={skyView} revealed={constellations} onToggle={() => setConstellations(value => !value)} onReturn={() => moveView(true)} />
-      <div className="proposal-world" inert={overlay !== null} onPointerMove={event => {
+      <div className="proposal-world" inert={overlay !== null || blocked} onPointerMove={event => {
         if (event.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         const box = event.currentTarget.getBoundingClientRect();
         event.currentTarget.style.setProperty("--parallax-x", `${((event.clientX - box.left) / box.width - .5) * 4}px`);
@@ -170,10 +170,10 @@ export function ProposalGarden() {
         <div ref={host} className="proposal-canvas" />
         {status === "ready" && <>
           <GardenSky view={skyView} revealed={constellations} />
-          <TreeBreeze host={host} portrait={skyView.height >= skyView.width} paused={overlay !== null} />
+          <TreeBreeze host={host} portrait={skyView.height >= skyView.width} paused={overlay !== null || blocked} />
           <HouseFinish portrait={skyView.height >= skyView.width} />
           <Atmosphere />
-          <GardenCompanion portrait={skyView.height >= skyView.width} paused={overlay !== null} />
+          <GardenCompanion portrait={skyView.height >= skyView.width} paused={overlay !== null || blocked} />
           <SkyField view={skyView} revealed={constellations} labelsOnly />
           <button className="proposal-sky-toggle" aria-label={constellations ? "Ocultar constelaciones del jardín" : "Mostrar constelaciones del jardín"} aria-pressed={constellations} onClick={() => setConstellations(value => !value)} />
           <button className="proposal-hotspot proposal-house" aria-label="Abrir diario" title="diario" onClick={() => setOverlay("diary")} />
@@ -190,7 +190,7 @@ export function ProposalGarden() {
           }} />)}
           <p className="proposal-prompt">toca la flor o explora la casa</p>
           <nav className="proposal-tools" aria-label="Controles del jardín">
-            <Link href="/" className="proposal-control" aria-label="Volver al jardín actual" title="Volver al jardín actual"><ArrowLeft size={20} /></Link>
+            <Link href={main ? "/anterior" : "/"} className="proposal-control" aria-label={main ? "Ver jardín anterior" : "Volver al jardín actual"} title={main ? "Ver jardín anterior" : "Volver al jardín actual"}><ArrowLeft size={20} /></Link>
             <div className="proposal-shortcuts">
               <button className="proposal-control" title="Abrir carta" aria-label="Abrir carta" onClick={() => setOverlay("letter")}><Flower2 size={20} /></button>
               <button className="proposal-control proposal-notebook" title="Abrir álbum" aria-label="Abrir álbum" onClick={() => setOverlay("diary")}><BookOpen size={23} /></button>
@@ -205,7 +205,7 @@ export function ProposalGarden() {
       </div>}
       <AnimatePresence>
         {overlay === "letter" && <LetterOverlay onClose={() => setOverlay(null)} />}
-        {overlay === "diary" && <DiaryOverlay repository={previewRepository} onClose={() => setOverlay(null)} />}
+        {overlay === "diary" && <DiaryOverlay repository={main ? undefined : previewRepository} onClose={() => setOverlay(null)} />}
         {overlay === "message" && <MessageOverlay title="Una flor para ti" body={message} onClose={() => setOverlay(null)} />}
       </AnimatePresence>
     </main>
