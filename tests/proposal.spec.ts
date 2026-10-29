@@ -1,0 +1,145 @@
+import { expect, test } from "@playwright/test";
+import sky from "../src/components/proposal/sky-data.json";
+
+test("birthday sky uses the requested date and opens by touch or scrolling", async ({ page }) => {
+  expect(sky.meta.instant).toBe("2007-08-07T02:00:00.000Z");
+  expect(sky.meta.latitude).toBeCloseTo(15.32097);
+  expect(sky.stars.every(star => star.alt > 0 && star.mag <= 5)).toBe(true);
+  expect(sky.planets.map(planet => planet.id)).toEqual(["Jupiter"]);
+  await page.goto("/propuesta");
+  await expect(page.getByRole("button", { name: "Abrir diario", exact: true })).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  const scroll = page.locator(".proposal-scroll");
+  await expect(page.locator(".proposal-garden-sky")).toBeVisible();
+  expect(await page.locator(".proposal-garden-sky [data-star-id]").count()).toBeGreaterThan(100);
+  const maskSamples = await page.locator(".proposal-garden-sky").evaluate(async node => {
+    const image = new Image();
+    image.src = (node as HTMLElement).style.maskImage.slice(5, -2);
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(image, 0, 0);
+    return [[.29, .06], [.1, .2], [.7, .35], [.2, .6], [.79, .257], [.81, .265]].map(([x, y]) => ctx.getImageData(Math.floor(x * canvas.width), Math.floor(y * canvas.height), 1, 1).data[3]);
+  });
+  expect(maskSamples).toEqual([255, 0, 0, 0, 0, 0]);
+  await expect(page.locator(".proposal-mountain-ridge")).toBeVisible();
+  const starId = await page.locator(".proposal-garden-sky [data-star-id]").first().getAttribute("data-star-id");
+  const pair = page.locator(`[data-star-id="${starId}"]`);
+  const coordinates = await pair.evaluateAll(nodes => nodes.map(node => [node.getAttribute("cx"), node.getAttribute("cy")]));
+  expect(coordinates[0]).toEqual(coordinates[1]);
+  await page.getByRole("button", { name: "Mostrar constelaciones del jardín", exact: true }).click();
+  await expect(page.locator(".proposal-garden-sky .historic-constellations")).toHaveAttribute("data-visible", "true");
+  await page.waitForTimeout(800);
+  await page.screenshot({ path: "test-results/proposal-integrated-sky.png" });
+  await page.getByRole("button", { name: "Ocultar constelaciones del jardín", exact: true }).click();
+  expect(await scroll.evaluate(node => Math.abs(node.scrollHeight - node.clientHeight - node.scrollTop))).toBeLessThan(8);
+  await scroll.evaluate(node => { node.scrollTop = 0; });
+  await expect(page.locator(".historic-sky .historic-constellations")).toHaveAttribute("data-visible", "false");
+  await page.getByRole("button", { name: "Mostrar constelaciones", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Ocultar constelaciones", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await page.waitForTimeout(800);
+  await page.screenshot({ path: "test-results/proposal-sky-portrait.png" });
+  await page.getByRole("button", { name: "Volver al jardín", exact: true }).click();
+  await page.waitForTimeout(1000);
+  await scroll.evaluate(node => { node.scrollTop = 0; });
+  await page.waitForTimeout(1000);
+  await page.getByRole("button", { name: "Ocultar constelaciones", exact: true }).click();
+  await expect(page.locator(".historic-sky .historic-constellations")).toHaveAttribute("data-visible", "false");
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.getByRole("button", { name: "Mostrar constelaciones", exact: true }).click();
+  await page.waitForTimeout(800);
+  await page.screenshot({ path: "test-results/proposal-sky-landscape.png" });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+});
+
+test("isolated proposal works in portrait, landscape and desktop", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+  page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
+  await page.goto("/propuesta");
+  await expect(page.getByRole("button", { name: "Abrir diario", exact: true })).toBeVisible({ timeout: 30000 });
+  await expect(page.locator(".proposal-firefly")).toHaveCount(18);
+  await page.evaluate(() => document.fonts.ready);
+  expect(await page.evaluate(() => document.fonts.check('23px "Garden Caveat"'))).toBe(true);
+  const firefly = page.locator(".proposal-firefly").first();
+  const before = await firefly.evaluate(node => getComputedStyle(node).transform);
+  await page.waitForTimeout(250);
+  expect(await firefly.evaluate(node => getComputedStyle(node).transform)).not.toBe(before);
+  await page.screenshot({ path: "test-results/proposal-portrait.png" });
+  const canvas = page.locator("canvas");
+  const initial = await canvas.screenshot();
+  await page.waitForTimeout(700);
+  expect(initial.equals(await canvas.screenshot())).toBe(false);
+  await page.getByRole("button", { name: "Abrir carta del tulipán" }).click();
+  await expect(page.getByRole("button", { name: "volver al jardin" })).toBeVisible();
+  await page.getByRole("button", { name: "volver al jardin" }).click();
+  await page.getByRole("button", { name: "Una flor para ti 1", exact: true }).dblclick();
+  await expect(page.getByRole("heading", { name: "Una flor para ti", exact: true })).toBeVisible();
+  const first = await page.locator("article p").last().textContent();
+  await page.getByRole("button", { name: "Recordarlo" }).click();
+  await page.getByRole("button", { name: "Una flor para ti 1", exact: true }).dblclick();
+  await expect(page.getByRole("heading", { name: "Una flor para ti", exact: true })).toBeVisible();
+  expect(await page.locator("article p").last().textContent()).not.toBe(first);
+  await page.getByRole("button", { name: "Recordarlo" }).click();
+  await page.getByRole("button", { name: "Abrir diario", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Álbum de recuerdos" })).toBeVisible();
+  await page.getByRole("button", { name: "Una página", exact: true }).first().click();
+  await page.getByLabel("título", { exact: true }).fill("Solo en la propuesta");
+  await page.getByRole("button", { name: "guardar", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Solo en la propuesta" })).toBeVisible();
+  await page.waitForTimeout(700);
+  await page.screenshot({ path: "test-results/proposal-diary.png" });
+  await page.getByRole("button", { name: "Cerrar diario" }).click();
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: "test-results/proposal-landscape.png" });
+  await page.getByRole("button", { name: "Abrir carta del tulipán" }).click();
+  await page.getByRole("button", { name: "volver al jardin" }).click();
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: "test-results/proposal-desktop.png" });
+  await page.getByRole("link", { name: "Volver al jardín actual" }).click();
+  await page.getByRole("button", { name: "Omitir bienvenida e ir al jardin" }).click();
+  await page.getByRole("button", { name: "Abrir diario", exact: true }).click({ timeout: 20000 });
+  await expect(page.getByText("Tu primera página está esperando")).toBeVisible();
+  await expect(page.getByText("Solo en la propuesta")).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
+
+test("proposal remains usable with reduced motion on a small screen", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto("/propuesta");
+  await expect(page.getByRole("button", { name: "Abrir diario", exact: true })).toBeVisible();
+  await page.screenshot({ path: "test-results/proposal-small.png" });
+  expect(await page.locator(".proposal-firefly").first().evaluate(node => getComputedStyle(node).animationName)).toBe("none");
+  expect(await page.locator(".proposal-smoke").evaluate(node => getComputedStyle(node).display)).toBe("none");
+  expect(await page.locator(".historic-star-bright").first().evaluate(node => getComputedStyle(node).animationName)).toBe("none");
+  for (const button of await page.locator(".proposal-hotspot").all()) {
+    const box = await button.boundingBox();
+    expect(box!.width).toBeGreaterThanOrEqual(44);
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+    expect(box!.x).toBeGreaterThanOrEqual(0);
+    expect(box!.y + box!.height).toBeLessThanOrEqual(568);
+  }
+});
+
+test("touch drag reveals the sky without opening the diary", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await context.newPage();
+  await page.goto("http://localhost:3045/propuesta");
+  await expect(page.getByRole("button", { name: "Abrir diario", exact: true })).toBeVisible();
+  const initial = await page.locator(".proposal-scroll").evaluate(node => node.scrollTop);
+  const cdp = await context.newCDPSession(page);
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: 190, y: 160 }] });
+  for (let y = 200; y <= 650; y += 50) {
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: 190, y }] });
+    await page.waitForTimeout(35);
+  }
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+  await page.waitForTimeout(500);
+  expect(await page.locator(".proposal-scroll").evaluate(node => node.scrollTop)).toBeLessThan(initial - 100);
+  await expect(page.getByRole("heading", { name: "Álbum de recuerdos" })).toHaveCount(0);
+  await context.close();
+});

@@ -1,0 +1,21 @@
+.garden-companion { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.companion-position { position: absolute; inset: 0; pointer-events: none; }
+.companion-dog { position: absolute; width: clamp(42px, 14%, 66px); left: 0; top: 0; transform: translate(-50%, -94%); }
+.companion-art { display: block; width: 100%; overflow: visible; }
+.dog-facing { transform-origin: 60px 55px; transform: scaleX(var(--dog-facing, -1)); }
+.dog-head { transform-origin: 76px 62px; }
+.dog-tail { transform-origin: 32px 62px; animation: dog-tail 1.4s ease-in-out infinite; }
+.dog-leg { transform-origin: 60px 76px; }
+.dog-tongue { opacity: 0; }
+.garden-companion[data-action="walk"] .dog-leg { animation: dog-step .65s ease-in-out infinite alternate; }
+.garden-companion[data-action="walk"] .dog-leg-back { animation-delay: -.65s; }
+.garden-companion[data-action="sniff"] .dog-head { animation: dog-sniff 1.8s ease-in-out infinite; }
+.garden-companion[data-action="drink"] .dog-head { transform: rotate(30deg) translate(2px, 4px); }
+.garden-companion[data-action="drink"] .dog-tongue { animation: dog-lap .5s ease-in-out infinite; }
+.garden-companion[data-active="false"] * { animation-play-state: paused !important; }
+.companion-flowers { position: absolute; width: clamp(25px, 9%, 42px); height: auto; transform: translate(-50%, -92%); }
+@keyframes dog-tail { 0%,100% { transform: rotate(-9deg); } 50% { transform: rotate(12deg); } }
+@keyframes dog-step { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
+@keyframes dog-sniff { 0%,100% { transform: rotate(19deg); } 50% { transform: rotate(26deg) translate(1px, 1px); } }
+@keyframes dog-lap { 0%,100% { opacity: .2; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .garden-companion * { animation: none !important; } }

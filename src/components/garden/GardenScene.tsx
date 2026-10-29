@@ -10,6 +10,7 @@ import {
   TextStyle,
 } from "pixi.js";
 import { AnimatePresence, motion } from "framer-motion";
+import { BookOpen, Flower2, Volume2, VolumeX } from "lucide-react";
 import { DiaryOverlay } from "@/components/ui/DiaryOverlay";
 import { LetterOverlay } from "@/components/ui/LetterOverlay";
 import { MessageOverlay } from "@/components/ui/MessageOverlay";
@@ -195,6 +196,7 @@ export function GardenScene() {
   const [showParticles, setShowParticles] = useState(false);
   const [diaryOpen, setDiaryOpen] = useState(false);
   const [activeMessage, setActiveMessage] = useState<FlowerMessage | null>(null);
+  const [muted, setMuted] = useState(false);
 
   useEffect(() => {
     phaseRef.current = phase;
@@ -282,21 +284,22 @@ export function GardenScene() {
 
       const buildScene = () => {
         if (tickerRef.current) app.ticker.remove(tickerRef.current);
-        stage.removeChildren();
+        stage.removeChildren().forEach(child => child.destroy({ children: true }));
 
         const w = app.screen.width;
         const h = app.screen.height;
-        const groundY = h * 0.58;
+        const portrait = h > w;
+        const groundY = h * (portrait ? 0.46 : 0.55);
         const min = Math.min(w, h);
 
         drawStorybookLandscape(stage, w, h, groundY);
-        const pondFish = drawLake(stage, w * 0.35, groundY + h * 0.18, min * 0.22);
+        const pondFish = drawLake(stage, w * (portrait ? 0.24 : 0.3), groundY + h * 0.18, min * 0.22);
         const fireflies = drawFireflies(stage, w, h, groundY);
         const butterflies = drawButterflies(stage, w, h, groundY);
         const birds = drawSkyBirds(stage, w, h);
         const leaves = drawFallingLeaves(stage, w, h);
 
-        const houseHotspot = drawHouse(stage, w * 0.77, groundY - h * 0.01, min * 0.28);
+        const houseHotspot = drawHouse(stage, w * 0.76, groundY - h * 0.01, min * (portrait ? 0.36 : 0.3));
         houseHotspot.on("pointertap", () => setDiaryOpen(true));
 
         drawInteractiveFlowers(stage, w, h, groundY, (message) => {
@@ -305,8 +308,15 @@ export function GardenScene() {
           }
         });
 
-        const parts = drawSeedAndFlower(stage, w * 0.5, groundY + h * 0.02, min);
-        const prompt = drawPrompt(stage, w / 2, h * 0.84, "");
+        const parts = drawSeedAndFlower(stage, w * (portrait ? 0.56 : 0.5), groundY + h * (portrait ? 0.21 : 0.04), min);
+        const promptY = portrait ? Math.max(38, h * 0.08) : h - 76;
+        const prompt = drawPrompt(stage, w / 2, promptY, "", portrait ? 13 : 16);
+        if (phaseRef.current === "bloomed" || phaseRef.current === "letter") {
+          animateBloom(parts, 3600);
+          prompt.text = "toca la flor o explora la casa";
+        } else if (phaseRef.current === "growing") {
+          animateBloom(parts, growElapsed);
+        }
 
         parts.seed.eventMode = "static";
         parts.seed.cursor = "pointer";
@@ -327,7 +337,8 @@ export function GardenScene() {
         });
 
         const update = () => {
-          idleElapsed += app.ticker.deltaMS;
+          if (document.hidden) return;
+          idleElapsed += Math.min(app.ticker.deltaMS, 50);
           const t = idleElapsed;
 
           swayByName(stage, "ambient", t, 0.001, 2.4);
@@ -339,8 +350,8 @@ export function GardenScene() {
           animatePondFish(pondFish, t);
           parts.seed.y = Math.sin(t * 0.002) * 5;
           parts.glow.alpha = 0.34 + Math.sin(t * 0.003) * 0.16;
-          prompt.alpha = 0.62 + Math.sin(t * 0.003) * 0.28;
-          prompt.y = h * 0.84 + Math.sin(t * 0.002) * 3;
+          prompt.alpha = 0.9;
+          prompt.y = promptY;
 
           if (phaseRef.current === "bloomed" || phaseRef.current === "letter") {
             parts.root.rotation = Math.sin(t * 0.0011) * 0.025;
@@ -350,7 +361,7 @@ export function GardenScene() {
           if (phaseRef.current !== "growing") return;
 
           prompt.text = "";
-          growElapsed += app.ticker.deltaMS;
+          growElapsed += Math.min(app.ticker.deltaMS, 50);
           animateBloom(parts, growElapsed);
 
           if (growElapsed >= 3600) {
@@ -371,12 +382,9 @@ export function GardenScene() {
         buildScene();
       };
 
-      window.addEventListener("resize", resize);
-      cleanupResize = () => window.removeEventListener("resize", resize);
-
-      cleanupResize = () => {
-        window.removeEventListener("resize", resize);
-      };
+      const observer = new ResizeObserver(resize);
+      observer.observe(host);
+      cleanupResize = () => observer.disconnect();
     };
 
     void init();
@@ -403,8 +411,15 @@ export function GardenScene() {
       onPointerDownCapture={startBackgroundMusic}
       onKeyDownCapture={startBackgroundMusic}
     >
-      <audio ref={audioRef} src="/music/until-i-found-you.mp3" preload="auto" />
-      <div ref={canvasRef} className="fixed inset-0 h-full w-full" />
+      <audio ref={audioRef} src="/music/until-i-found-you.mp3" preload="auto" muted={muted} />
+      <div ref={canvasRef} className="fixed inset-0 h-full w-full" style={{ touchAction: "none" }} />
+      {phase === "bloomed" && !diaryOpen && !activeMessage && (
+        <nav className="garden-controls" aria-label="Jardín">
+          <button title="Abrir carta" aria-label="Abrir carta" onClick={() => setPhase("letter")}><Flower2 size={21} /></button>
+          <button title="Abrir diario" aria-label="Abrir diario" onClick={() => setDiaryOpen(true)}><BookOpen size={21} /></button>
+          <button title={muted ? "Activar música" : "Silenciar música"} aria-label={muted ? "Activar música" : "Silenciar música"} aria-pressed={muted} onClick={() => setMuted(value => !value)}>{muted ? <VolumeX size={21} /> : <Volume2 size={21} />}</button>
+        </nav>
+      )}
       {showParticles && <Particles />}
       <AnimatePresence>
         {phase === "preloading" && (
@@ -473,17 +488,17 @@ function drawStorybookLandscape(parent: Container, w: number, h: number, groundY
   drawCloud(parent, w * 0.18, h * 0.18, Math.min(w, h) * 0.08, 0x7b78a8, 0.34);
   drawCloud(parent, w * 0.83, h * 0.14, Math.min(w, h) * 0.1, 0x9a84b8, 0.32);
   drawDistantHills(parent, w, h, groundY);
-  drawFence(parent, w, groundY + h * 0.035, Math.min(w, h));
   drawGround(parent, w, h, groundY);
+  drawFence(parent, w, groundY + h * 0.035, Math.min(w, h));
   drawLargeTree(parent, w * 0.1, groundY + h * 0.03, Math.min(w, h));
   drawStonePath(parent, w, h, groundY);
-  drawFlowerArch(parent, w * 0.55, groundY + h * 0.02, Math.min(w, h) * 0.16);
+  drawFlowerArch(parent, w * 0.48, groundY + h * 0.02, Math.min(w, h) * 0.13);
   drawBushes(parent, w, h, groundY);
 }
 
 function drawGround(parent: Container, w: number, h: number, groundY: number) {
   const ground = new Graphics();
-  ground.rect(0, groundY, w, h - groundY).fill({ color: colors.grass });
+  multiGradientRect(ground, 0, groundY, w, h - groundY, [{ r: 37, g: 85, b: 65 }, { r: 22, g: 65, b: 47 }, { r: 11, g: 39, b: 33 }]);
   ground.rect(0, groundY, w, h * 0.08).fill({ color: colors.grassLight, alpha: 0.28 });
   ground.ellipse(w * 0.15, groundY + h * 0.22, w * 0.22, h * 0.08).fill({ color: colors.grassDark, alpha: 0.24 });
   ground.ellipse(w * 0.72, groundY + h * 0.27, w * 0.28, h * 0.09).fill({ color: 0x071f17, alpha: 0.22 });
@@ -494,7 +509,7 @@ function drawGround(parent: Container, w: number, h: number, groundY: number) {
   ambient.label = "ambient";
   parent.addChild(ambient);
 
-  for (let i = 0; i < 54; i++) {
+  for (let i = 0; i < 28; i++) {
     const blade = new Graphics();
     const x = w * ((i * 0.071 + 0.03) % 1);
     const y = groundY + h * (0.03 + ((i * 0.113) % 0.36));
@@ -504,7 +519,7 @@ function drawGround(parent: Container, w: number, h: number, groundY: number) {
     ambient.addChild(blade);
   }
 
-  for (let i = 0; i < 95; i++) {
+  for (let i = 0; i < 40; i++) {
     const speck = new Graphics();
     const x = w * ((i * 0.113 + 0.021) % 1);
     const y = groundY + h * (0.02 + ((i * 0.071) % 0.38));
@@ -552,15 +567,22 @@ function drawLake(parent: Container, x: number, y: number, s: number): PondFish[
   water.stroke({ color: 0x164b52, width: Math.max(3, s * 0.035), alpha: 0.5 });
   pond.addChild(water);
 
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 6; i++) {
     const reed = new Graphics();
-    const rx = x - s * 0.92 + ((i * 0.17) % 1.84) * s;
+    const rx = x + s * (i < 3 ? -.87 + i * .09 : .68 + (i - 3) * .09);
     const ry = y + s * (0.19 + (i % 3) * 0.03);
     reed.moveTo(rx, ry);
     reed.quadraticCurveTo(rx + (i % 2 ? 8 : -8), ry - s * 0.22, rx + (i % 2 ? 14 : -14), ry - s * 0.36);
     reed.stroke({ color: 0x2a7a35, width: 3, alpha: 0.8 });
-    reed.ellipse(rx + (i % 2 ? 14 : -14), ry - s * 0.36, 4, 10).fill({ color: 0x996c31, alpha: 0.85 });
+    reed.ellipse(rx + (i % 2 ? 14 : -14), ry - s * 0.36, 2.5, 6).fill({ color: 0x996c31, alpha: 0.85 });
     pond.addChild(reed);
+  }
+
+  for (let i = 0; i < 9; i++) {
+    const angle = Math.PI * i / 8;
+    const rock = new Graphics();
+    rock.ellipse(x + Math.cos(angle) * s, y + Math.sin(angle) * s * .34, s * .1, s * .055).fill({ color: i % 2 ? 0x68847b : 0x89978b });
+    pond.addChild(rock);
   }
 
   const fish: PondFish[] = [];
@@ -790,12 +812,20 @@ function drawInteractiveFlowers(parent: Container, w: number, h: number, groundY
     { x: 0.94, y: 0.32, s: 0.58, color: 0xfff5db, type: "daisy" as GardenFlowerType },
   ];
 
-  positions.forEach((item, index) => {
-    const flower = drawGardenFlower(parent, w * item.x, groundY + h * item.y, Math.min(w, h) * 0.085 * item.s, item.color, item.type);
+  const portraitPositions = [
+    { x: .1, y: .76 }, { x: .28, y: .82 }, { x: .78, y: .73 },
+    { x: .91, y: .81 }, { x: .14, y: .9 }, { x: .74, y: .91 },
+    { x: .35, y: .87 }, { x: .9, y: .96 }, { x: .12, y: .55 },
+  ];
+  const visiblePositions = h > w ? positions.slice(0, portraitPositions.length) : positions;
+  visiblePositions.forEach((item, index) => {
+    const position = h > w ? portraitPositions[index] : { x: item.x, y: groundY / h + item.y };
+    const size = Math.max(23, Math.min(w, h) * 0.075 * item.s);
+    const flower = drawGardenFlower(parent, w * position.x, h * position.y, size, item.color, item.type);
     flower.eventMode = "static";
     flower.cursor = "pointer";
-    flower.hitArea = new Rectangle(-62, -126, 124, 146);
-    let lastTap = 0;
+    flower.hitArea = new Rectangle(-Math.max(24, size * .7), -size * 1.7, Math.max(48, size * 1.4), Math.max(48, size * 1.8));
+    let lastTap = -Infinity;
     flower.on("pointertap", () => {
       const now = performance.now();
       if (now - lastTap < 560) onMessage(pickMessage(index * 37 + Math.floor(now / 1000)));
@@ -809,6 +839,10 @@ function drawGardenFlower(parent: Container, x: number, y: number, s: number, pe
   flower.x = x;
   flower.y = y;
   parent.addChild(flower);
+
+  const shadow = new Graphics();
+  shadow.ellipse(0, 2, s * .55, s * .12).fill({ color: 0x061b16, alpha: .24 });
+  flower.addChild(shadow);
 
   const stem = new Graphics();
   stem.moveTo(0, 0);
@@ -910,7 +944,7 @@ function drawRoseHead(parent: Container, s: number, petalColor: number) {
 }
 
 function drawSeedAndFlower(parent: Container, x: number, y: number, sizeBase: number): BloomParts {
-  const scale = Math.max(0.72, Math.min(sizeBase / 760, 1.08));
+  const scale = Math.max(0.58, Math.min(sizeBase / 760, 1.0));
   const root = new Container();
   root.x = x;
   root.y = y;
@@ -918,8 +952,9 @@ function drawSeedAndFlower(parent: Container, x: number, y: number, sizeBase: nu
   parent.addChild(root);
 
   const glow = new Graphics();
-  glow.circle(0, -38, 86).fill({ color: 0xffd764, alpha: 0.22 });
-  glow.circle(0, -38, 48).fill({ color: 0xffffff, alpha: 0.14 });
+  for (let radius = 90; radius > 10; radius -= 5) {
+    glow.ellipse(0, -10, radius, radius * .3).fill({ color: 0xffd764, alpha: 0.012 });
+  }
   root.addChild(glow);
 
   const stem = new Graphics();
@@ -989,37 +1024,37 @@ function drawMainTulip(parent: Container, shine: Graphics) {
   shadow.ellipse(0, 18, 48, 12).fill({ color: 0x241037, alpha: 0.24 });
   parent.addChild(shadow);
 
-  const outline = 0x140716;
+  const outline = 0x422155;
   const leftPetal = new Graphics();
-  leftPetal.moveTo(-4, 24);
-  leftPetal.bezierCurveTo(-40, 18, -58, -28, -40, -82);
-  leftPetal.bezierCurveTo(-14, -76, -4, -39, -4, 24);
+  leftPetal.moveTo(0, 24);
+  leftPetal.bezierCurveTo(-47, 18, -57, -24, -45, -68);
+  leftPetal.bezierCurveTo(-15, -65, 18, -22, 0, 24);
   leftPetal.fill({ color: 0x8737be });
-  leftPetal.stroke({ color: outline, width: 7, alpha: 0.92, join: "round", cap: "round" });
+  leftPetal.stroke({ color: outline, width: 3.5, alpha: 0.92, join: "round", cap: "round" });
   parent.addChild(leftPetal);
 
   const rightPetal = new Graphics();
-  rightPetal.moveTo(4, 24);
-  rightPetal.bezierCurveTo(30, -38, 58, -70, 78, -58);
-  rightPetal.bezierCurveTo(78, -8, 46, 23, 4, 24);
+  rightPetal.moveTo(0, 24);
+  rightPetal.bezierCurveTo(-10, -20, 20, -62, 46, -66);
+  rightPetal.bezierCurveTo(58, -20, 40, 21, 0, 24);
   rightPetal.fill({ color: 0x9b48d7 });
-  rightPetal.stroke({ color: outline, width: 7, alpha: 0.92, join: "round", cap: "round" });
+  rightPetal.stroke({ color: outline, width: 3.5, alpha: 0.92, join: "round", cap: "round" });
   parent.addChild(rightPetal);
 
   const centerPetal = new Graphics();
   centerPetal.moveTo(0, 26);
-  centerPetal.bezierCurveTo(-19, -14, -12, -69, 15, -98);
-  centerPetal.bezierCurveTo(44, -67, 40, -12, 0, 26);
+  centerPetal.bezierCurveTo(-27, -14, -27, -58, 0, -83);
+  centerPetal.bezierCurveTo(29, -57, 29, -12, 0, 26);
   centerPetal.fill({ color: 0xcf64f0 });
-  centerPetal.stroke({ color: outline, width: 7, alpha: 0.92, join: "round", cap: "round" });
+  centerPetal.stroke({ color: outline, width: 3.5, alpha: 0.92, join: "round", cap: "round" });
   parent.addChild(centerPetal);
 
   const frontCup = new Graphics();
-  frontCup.moveTo(-39, -2);
-  frontCup.bezierCurveTo(-27, 27, 28, 35, 54, -18);
-  frontCup.bezierCurveTo(28, -4, -6, 3, -39, -2);
+  frontCup.moveTo(-37, -4);
+  frontCup.bezierCurveTo(-30, 32, 25, 37, 39, -10);
+  frontCup.bezierCurveTo(13, -5, -11, 18, -37, -4);
   frontCup.fill({ color: 0x7726a6 });
-  frontCup.stroke({ color: outline, width: 7, alpha: 0.92, join: "round", cap: "round" });
+  frontCup.stroke({ color: outline, width: 3, alpha: 0.7, join: "round", cap: "round" });
   parent.addChild(frontCup);
 
   shine.moveTo(-27, -36);
@@ -1028,8 +1063,8 @@ function drawMainTulip(parent: Container, shine: Graphics) {
   shine.moveTo(11, -70);
   shine.bezierCurveTo(20, -48, 18, -27, 5, -9);
   shine.stroke({ color: 0xffffff, width: 6, alpha: 0.22, cap: "round" });
-  shine.moveTo(42, -37);
-  shine.bezierCurveTo(55, -35, 62, -25, 61, -13);
+  shine.moveTo(30, -45);
+  shine.bezierCurveTo(38, -44, 41, -30, 35, -17);
   shine.stroke({ color: 0xffffff, width: 5, alpha: 0.14, cap: "round" });
 }
 
@@ -1068,10 +1103,11 @@ function drawSeedHalf(g: Graphics, direction: -1 | 1) {
 }
 
 function drawMoon(parent: Graphics, x: number, y: number, r: number) {
-  parent.circle(x, y, r * 3.8).fill({ color: 0xffe8a9, alpha: 0.12 });
-  parent.circle(x, y, r * 2.1).fill({ color: 0xffe0a3, alpha: 0.18 });
-  parent.circle(x, y, r).fill({ color: 0xfff1bd });
-  parent.circle(x + r * 0.36, y - r * 0.12, r * 0.92).fill({ color: rgbToHex(colors.skyGlow), alpha: 0.95 });
+  for (let i = 28; i > 0; i--) parent.circle(x, y, r * (1 + i * .085)).fill({ color: 0xffe8a9, alpha: .004 });
+  parent.moveTo(x + r * .5, y - r);
+  parent.bezierCurveTo(x - r * 1.15, y - r * .75, x - r * 1.1, y + r, x + r * .5, y + r * .85);
+  parent.bezierCurveTo(x - r * .45, y + r * .4, x - r * .45, y - r * .5, x + r * .5, y - r);
+  parent.fill({ color: 0xfff1bd });
 }
 
 function drawStars(parent: Container, w: number, h: number, groundY: number) {
@@ -1087,17 +1123,18 @@ function drawStars(parent: Container, w: number, h: number, groundY: number) {
     const star = new Graphics();
     const size = 1.2 + (i % 4) * 0.55;
     star.circle(x, y, size).fill({ color: 0xffe7a3, alpha: 0.64 });
-    star.circle(x, y, size * 3.4).fill({ color: 0xffd25d, alpha: 0.05 });
+    star.circle(x, y, size * 1.8).fill({ color: 0xffd25d, alpha: 0.025 });
     stars.addChild(star);
   }
 }
 
 function drawCloud(parent: Container, x: number, y: number, s: number, color: number, alpha: number) {
   const cloud = new Graphics();
-  cloud.circle(x - s * 0.55, y + s * 0.12, s * 0.38).fill({ color, alpha });
-  cloud.circle(x - s * 0.12, y, s * 0.5).fill({ color, alpha });
-  cloud.circle(x + s * 0.36, y + s * 0.08, s * 0.42).fill({ color, alpha });
-  cloud.roundRect(x - s * 0.82, y + s * 0.1, s * 1.58, s * 0.38, s * 0.18).fill({ color, alpha });
+  cloud.moveTo(x - s * .72, y + s * .33);
+  cloud.bezierCurveTo(x - s, y + s * .32, x - s * .92, y - s * .07, x - s * .48, y - s * .08);
+  cloud.bezierCurveTo(x - s * .44, y - s * .64, x + s * .25, y - s * .6, x + s * .28, y - s * .12);
+  cloud.bezierCurveTo(x + s * .78, y - s * .25, x + s, y + s * .34, x + s * .52, y + s * .33);
+  cloud.closePath().fill({ color, alpha });
   parent.addChild(cloud);
 }
 
@@ -1148,7 +1185,7 @@ function drawFlowerArch(parent: Container, x: number, y: number, s: number) {
   parent.addChild(arch);
 
   for (let i = 0; i < 28; i++) {
-    const t = i / 17;
+    const t = i / 27;
     const angle = Math.PI * (1 - t);
     const px = x + Math.cos(angle) * s * 0.45;
     const py = y - Math.sin(angle) * s * 0.58;
@@ -1164,7 +1201,7 @@ function drawFireflies(parent: Container, w: number, h: number, groundY: number)
   fireflies.label = "ambient";
   parent.addChild(fireflies);
   const items: Firefly[] = [];
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 8; i++) {
     const x = w * (0.06 + ((i * 0.173) % 0.88));
     const y = groundY - h * 0.12 + h * ((i * 0.061) % 0.24);
     const dot = new Container();
@@ -1259,7 +1296,7 @@ function drawSkyBirds(parent: Container, w: number, h: number): SkyBird[] {
 
 function drawFallingLeaves(parent: Container, w: number, h: number): FallingLeaf[] {
   const leaves: FallingLeaf[] = [];
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < 5; i++) {
     const leaf = new Graphics();
     const x = w * (0.06 + ((i * 0.073) % 0.35));
     const y = h * (0.04 + ((i * 0.121) % 0.45));
@@ -1331,7 +1368,7 @@ function animatePondFish(items: PondFish[], t: number) {
   });
 }
 
-function drawPrompt(parent: Container, x: number, y: number, label: string): Container & { text: string } {
+function drawPrompt(parent: Container, x: number, y: number, label: string, fontSize = 16): Container & { text: string } {
   const prompt = new Container();
   prompt.x = x;
   prompt.y = y;
@@ -1346,7 +1383,7 @@ function drawPrompt(parent: Container, x: number, y: number, label: string): Con
       align: "center",
       fill: 0xfff4c6,
       fontFamily: "'Segoe UI', Arial, sans-serif",
-      fontSize: 21,
+      fontSize,
       fontWeight: "800",
       letterSpacing: 0,
       dropShadow: { color: 0x07100d, alpha: 0.8, blur: 7, distance: 0 },

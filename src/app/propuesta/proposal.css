@@ -1,0 +1,217 @@
+.proposal-garden { position: fixed; inset: 0; overflow: hidden; background: #12314f; }
+.proposal-scroll { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior-y: contain; scrollbar-width: none; touch-action: pan-y; }
+.proposal-scroll::-webkit-scrollbar { display: none; }
+.proposal-scroll .proposal-world { position: relative; height: 100svh; min-height: 100%; inset: auto; }
+.historic-sky { position: relative; height: max(560px, 85svh); background: #102c49; color: #e8e7db; isolation: isolate; }
+.historic-sky::after { content: ''; position: absolute; inset: auto 0 -1px; height: 40px; background: linear-gradient(transparent, #12314f); pointer-events: none; }
+.historic-sky-heading { position: absolute; z-index: 1; top: max(24px, env(safe-area-inset-top)); left: 16px; right: 16px; text-align: center; pointer-events: none; }
+.historic-sky-heading p, .historic-sky-heading time { font: 12px/1.6 Georgia, serif; color: #bfcddd; }
+.historic-sky-heading h1 { font: 500 32px/1.25 "Garden Caveat", cursive; margin: 6px 0; color: #fff0cd; }
+.historic-sky-map { position: absolute; inset: 126px 8px 65px; display: block; width: calc(100% - 16px); border: 0; padding: 0; background: transparent; cursor: pointer; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
+.historic-sky-map svg { width: 100%; height: 100%; overflow: visible; }
+.historic-constellations, .historic-planet-label { opacity: 0; transition: opacity .7s ease; }
+.historic-constellations[data-visible="true"], .historic-planet-label[data-visible="true"] { opacity: 1; }
+.historic-constellations line { stroke: #96bfc9; stroke-width: 1.2; stroke-opacity: .5; }
+.historic-constellations text, .historic-planet-label { fill: #d5e3df; font: 30px Georgia, serif; paint-order: stroke; stroke: #102c49; stroke-width: 5px; stroke-linejoin: round; }
+.historic-constellations text { text-anchor: middle; }
+.historic-cardinals text { fill: #829bb4; font-size: 21px; }
+.historic-star-bright { animation: historic-twinkle 7s ease-in-out infinite alternate; }
+.historic-sky-return { position: absolute; bottom: 16px; left: calc(50% - 24px); width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid #cbdcc544; border-radius: 5px; background: #0d253a; color: #e8e7db; cursor: pointer; z-index: 2; }
+.proposal-sky-peek { position: absolute; top: 9%; left: 40%; width: 46%; height: 14%; border: 0; color: #d5e3df99; background: transparent; cursor: pointer; display: grid; place-items: start center; padding-top: 10px; touch-action: pan-y; }
+.historic-sky-map:focus-visible, .historic-sky-return:focus-visible, .proposal-sky-peek:focus-visible { outline: 2px dashed #f9dfb2; outline-offset: -3px; }
+@keyframes historic-twinkle { from { opacity: .5; } to { opacity: 1; } }
+@media (orientation: landscape) {
+  .historic-sky { height: 100svh; min-height: 320px; }
+  .historic-sky-heading { top: 30%; left: 16px; right: auto; width: 28%; }
+  .historic-sky-map { inset: 12px 16px 12px 32%; width: calc(68% - 16px); }
+  .historic-sky-return { left: calc(14% - 8px); bottom: 15%; }
+  .proposal-sky-peek { top: 9%; left: 32%; width: 30%; height: 17%; }
+}
+.proposal-scroll[inert] .historic-star-bright { animation-play-state: paused; }
+.historic-sky { height: max(320px, 50svh); min-height: 0; overflow: hidden; }
+.historic-sky::after { display: none; }
+.historic-sky-heading { top: max(24px, env(safe-area-inset-top)); left: 16px; right: 16px; width: auto; text-shadow: 0 2px 8px #102c49; }
+.historic-sky-heading h1 { font-size: 28px; }
+.historic-sky-map { inset: 0; width: 100%; }
+.historic-sky-map svg { overflow: hidden; }
+.historic-sky-return { left: auto; right: 12px; bottom: 12px; }
+.continuous-sky-field { display: block; width: 100%; height: 100%; overflow: hidden; }
+.historic-sky-labels { opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s; }
+.historic-sky-labels[data-visible="true"] { opacity: 1; visibility: visible; }
+.historic-sky-labels text { font: 600 18px "Garden Caveat", cursive; fill: #eee9d2; text-anchor: middle; paint-order: stroke; stroke: #102c49; stroke-width: 3px; stroke-linejoin: round; }
+.sky-label-layer { position: absolute; inset: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .historic-sky-labels { transition: none; } }
+.continuous-sky-field .historic-constellations line { stroke-width: .65; stroke-opacity: .48; }
+.proposal-garden-sky { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(#102c49, #17415e 35%); mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; }
+.proposal-mountain-ridge { position: absolute; inset: 0; width: 100%; height: 100%; }
+.proposal-sky-toggle { position: absolute; top: 62px; left: 30%; width: 70%; height: calc(24% - 62px); min-height: 44px; border: 0; background: transparent; cursor: pointer; touch-action: pan-y; }
+.proposal-sky-toggle:focus-visible { outline: 2px dashed #f9dfb2; outline-offset: -4px; }
+.proposal-sky-peek { top: 18%; left: auto; right: 12px; width: 44px; height: 44px; padding: 0; place-items: center; }
+@media (prefers-reduced-motion: reduce) {
+  .historic-star-bright { animation: none; }
+  .historic-constellations, .historic-planet-label { transition: none; }
+}
+.proposal-atmosphere { position: absolute; inset: 0; pointer-events: none; }
+.proposal-house-finish { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; translate: var(--parallax-x, 0px) var(--parallax-y, 0px); transition: translate .65s ease-out; }
+@media (prefers-reduced-motion: reduce) { .proposal-house-finish { translate: none; transition: none; } }
+.proposal-world { --wind-duration: 7s; --wind-delay: 0s; --wind-play-state: running; background: linear-gradient(#102c49, #17415e 35%); }
+.tree-breeze { position: absolute; inset: 0; pointer-events: none; }
+.tree-canopy { position: absolute; left: 0; top: 0; width: 46%; height: 40%; transform-origin: 12% 92%; animation: tree-sway var(--wind-duration) ease-in-out var(--wind-delay) infinite; animation-play-state: var(--wind-play-state); will-change: transform; }
+.tree-canopy-image { display: block; width: 100%; height: 100%; overflow: visible; }
+.tree-canopy-rim { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(125deg, transparent 25%, #6ba6d46b 55%, #b5dcf4 100%); opacity: .32; mix-blend-mode: screen; mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; }
+.tree-shadow { position: absolute; left: 1%; top: 46%; width: 49%; height: 4.5%; border-radius: 44% 58% 43% 55%; background: linear-gradient(90deg, #081f2b 8%, #102c39 70%, #102c3900); filter: blur(8px); opacity: .12; transform-origin: left center; animation: tree-shadow-drift var(--wind-duration) ease-in-out var(--wind-delay) infinite; animation-play-state: var(--wind-play-state); }
+@keyframes tree-shadow-drift { 0%,100% { transform: translateX(-1px) scaleX(.99) rotate(-7deg); } 50% { transform: translateX(1px) scaleX(1.01) rotate(-6.7deg); } }
+.tree-particles { position: absolute; left: 0; top: 0; width: 46%; height: 40%; --fall-distance: clamp(150px, 28svh, 280px); }
+.tree-falling-leaf { position: absolute; display: block; border-radius: 0 80% 5% 80%; background: var(--leaf-color, #8f9f64); box-shadow: inset -1px -1px #355f4940; opacity: 0; animation: tree-leaf-fall linear infinite; }
+.tree-falling-leaf::after { content: ''; position: absolute; left: 48%; top: 18%; height: 70%; width: 1px; rotate: -28deg; background: #355a4d60; }
+.tree-breeze[data-active="false"] .tree-falling-leaf { animation-play-state: paused; }
+.tree-breeze[data-reduced="true"] .tree-falling-leaf { display: none; }
+.tree-leaf-burst .tree-falling-leaf { animation-duration: 1.65s; animation-iteration-count: 1; animation-fill-mode: both; }
+.tree-touch { position: absolute; left: 0; top: 7%; width: 30%; height: 30%; min-width: 44px; min-height: 44px; border: 0; border-radius: 20%; background: transparent; cursor: pointer; pointer-events: auto; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
+.tree-touch:focus-visible { outline: 2px dashed #fff1bc; outline-offset: -5px; }
+.tree-breeze[data-reduced="true"][data-burst="true"] .tree-touch { background: #fff1bc0a; }
+.tree-firefly { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #ffe8a8; box-shadow: 0 0 5px 2px #ffe2a04d; animation: tree-firefly-drift ease-in-out infinite; }
+.tree-breeze[data-active="false"] .tree-firefly { animation-play-state: paused; }
+.tree-breeze[data-reduced="true"] .tree-firefly { animation: none; opacity: .4; }
+@keyframes tree-firefly-drift {
+  0%,100% { opacity: .16; transform: translate(0, 0); }
+  28% { opacity: .72; transform: translate(var(--fly-x), var(--fly-y)); }
+  64% { opacity: .3; transform: translate(calc(var(--fly-x) * -.4), -3px); }
+  83% { opacity: .6; }
+}
+@keyframes tree-leaf-fall {
+  0% { opacity: 0; transform: translate(0, -8px) rotate(-25deg); }
+  12% { opacity: .65; }
+  32% { transform: translate(var(--leaf-drift), calc(var(--fall-distance) * .3)) rotate(35deg); }
+  62% { opacity: .6; transform: translate(calc(var(--leaf-drift) * -.3), calc(var(--fall-distance) * .6)) rotate(100deg); }
+  90% { opacity: .3; }
+  100% { opacity: 0; transform: translate(calc(var(--leaf-drift) * 1.3), var(--fall-distance)) rotate(175deg); }
+}
+.tree-canopy, .tree-particles, .tree-shadow { translate: var(--parallax-x, 0px) var(--parallax-y, 0px); transition: translate .65s ease-out; }
+@keyframes tree-sway { 0%,100% { transform: rotate(-.65deg); } 50% { transform: rotate(.65deg); } }
+@media (orientation: landscape) { .tree-canopy, .tree-particles { width: 28%; height: 46%; } }
+@media (orientation: landscape) { .tree-shadow { left: 1%; top: 51%; width: 38%; height: 4.5%; } }
+@media (orientation: landscape) { .tree-touch { top: 15%; width: 23%; height: 28%; } }
+@media (prefers-reduced-motion: reduce) { .tree-canopy { animation: none; will-change: auto; } .tree-shadow { animation: none; } .tree-canopy, .tree-particles, .tree-shadow { translate: none; transition: none; } }
+.proposal-smoke { position: absolute; left: 80%; top: 24%; width: 1px; height: 1px; }
+.proposal-smoke i { position: absolute; bottom: 0; width: 16px; height: 28px; border-radius: 48%; background: #d4d6e6; filter: blur(7px); animation: proposal-smoke 9.2s ease-out infinite; }
+.proposal-window { position: absolute; background: #ffd48b; mix-blend-mode: screen; filter: blur(7px); border-radius: 45% 45% 15% 15%; animation: proposal-light 6s ease-in-out infinite alternate; }
+.proposal-window-upper { left: 56%; top: 32%; width: 4%; height: 5.5%; }
+.proposal-window-lower { left: 80%; top: 40%; width: 6%; height: 6%; animation-delay: -3.4s; }
+.proposal-firefly { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #ffe6a2; box-shadow: 0 0 5px 2px #ffe6a260; animation: proposal-fly ease-in-out infinite; }
+.proposal-reeds { position: absolute; left: 0; bottom: 0; width: 50%; height: 19%; transform-origin: 50% 100%; animation: proposal-sway var(--wind-duration) ease-in-out var(--wind-delay) infinite; animation-play-state: var(--wind-play-state); opacity: .8; }
+.proposal-tulip::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(ellipse, #fff2bc80, transparent 65%); opacity: 0; transition: opacity .3s; }
+.proposal-tulip:active::after, .proposal-tulip:focus-visible::after { opacity: 1; }
+.tulip-touch-glint { position: absolute; inset: 0 0 40%; border-radius: 50%; background: radial-gradient(ellipse, #f3d4ffb0, #c998ef30 40%, transparent 70%); pointer-events: none; opacity: 0; }
+.proposal-tulip:active::before { content: ''; position: absolute; left: 50%; top: 22%; width: 22px; height: 22px; background: #fff4c9; clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); filter: drop-shadow(0 0 4px #fff4c9); }
+.proposal-world[inert] .proposal-atmosphere * { animation-play-state: paused; }
+@keyframes proposal-smoke { 0% { opacity: 0; transform: translate(-4px, 0) scale(.4); } 20% { opacity: .12; } 100% { opacity: 0; transform: translate(18px, -95px) scale(2.8); } }
+@keyframes proposal-light { 0%,100% { opacity: .12; } 26% { opacity: .25; } 30% { opacity: .18; } 68% { opacity: .3; } }
+@keyframes proposal-fly { 0%,100% { opacity: .12; transform: translate(0, 0); } 35% { opacity: .8; transform: translate(var(--drift-x), var(--drift-y)); } 70% { opacity: .28; transform: translate(4px, -8px); } }
+@keyframes proposal-sway { 0%,100% { transform: skewX(-.25deg); } 50% { transform: skewX(.25deg); } }
+@media (orientation: landscape) {
+  .proposal-smoke { left: 84%; top: 22.5%; }
+  .proposal-window-upper { left: 71.8%; top: 34.5%; width: 3%; height: 6%; }
+  .proposal-window-lower { left: 84%; top: 46%; width: 3%; height: 8%; }
+  .proposal-reeds { width: 25%; height: 24%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .proposal-atmosphere *, .proposal-tulip::after { animation: none !important; transition: none !important; }
+  .proposal-smoke { display: none; }
+  .proposal-window { opacity: .18; }
+  .proposal-firefly { opacity: .45; }
+}
+.proposal-world, .proposal-canvas { position: absolute; inset: 0; }
+.proposal-canvas { filter: saturate(.91) contrast(1.025); }
+.proposal-canvas, .proposal-garden-sky, .proposal-atmosphere, .proposal-hotspot { translate: var(--parallax-x, 0px) var(--parallax-y, 0px); transition: translate .65s ease-out; }
+.proposal-canvas { scale: 1; }
+.proposal-reeds { translate: calc(var(--parallax-x, 0px) * -1.4) 0; }
+.proposal-world::before, .proposal-world::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.proposal-world::before { opacity: .045; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23ffffff' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E"); mix-blend-mode: soft-light; }
+.proposal-world::after { background: linear-gradient(135deg, #7da9cf0c, transparent 45%, #f4c88409), radial-gradient(ellipse at 59% 43%, transparent 48%, #08192a38 100%); box-shadow: inset 0 0 65px #07192920; }
+.proposal-world::before { opacity: .07; }
+.proposal-tools, .proposal-prompt { z-index: 2; }
+@media (prefers-reduced-motion: reduce) {
+  .proposal-canvas, .proposal-garden-sky, .proposal-atmosphere, .proposal-hotspot, .proposal-reeds { translate: none !important; transition: none !important; }
+}
+.proposal-canvas canvas { display: block; width: 100%; height: 100%; }
+.proposal-hotspot { position: absolute; min-width: 44px; min-height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; border-radius: 40%; }
+.proposal-hotspot:focus-visible { outline: 2px dashed #fff1bc; outline-offset: 5px; background: #fff1bc12; }
+.proposal-hotspot:active { background: #fff1bc10; }
+.proposal-house { left: 43%; top: 25%; width: 54%; height: 27%; }
+.proposal-tulip { left: 63%; top: 64%; width: 24%; height: 25%; }
+.proposal-flowers { width: 15%; height: 8%; }
+.proposal-flowers-0 { left: 0%; top: 73%; }
+.proposal-flowers-1 { left: 12%; top: 77%; }
+.proposal-flowers-2 { left: 0%; top: 80%; }
+.proposal-flowers-3 { left: 84%; top: 77%; height: 11%; }
+.proposal-tools { position: absolute; inset: max(16px, calc(env(safe-area-inset-top) + 8px)) max(16px, calc(env(safe-area-inset-right) + 8px)) auto max(16px, calc(env(safe-area-inset-left) + 8px)); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; pointer-events: none; }
+.proposal-shortcuts { display: flex; align-items: flex-start; flex: 0 0 auto; gap: 8px; }
+.proposal-control { display: grid; place-items: center; flex: 0 0 44px; box-sizing: border-box; width: 44px; height: 44px; color: #fff2c9; background: #0d2636a6; border: 1px solid #e7e2bd38; border-radius: 50%; cursor: pointer; pointer-events: auto; backdrop-filter: blur(4px); }
+.proposal-control:hover { background: #274b50; }
+.proposal-control:focus-visible { outline: 2px solid #fff0bb; outline-offset: 4px; }
+.proposal-prompt { position: absolute; bottom: max(22px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); max-width: calc(100% - 24px); width: max-content; padding: 8px 16px; border: 1px solid #e7e2bd30; border-radius: 24px; background: #17372cd6; color: #fff2c9; font: 13px/1.4 "Trebuchet MS", sans-serif; text-align: center; pointer-events: none; }
+.proposal-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 18px; color: #fff1c9; background: #102a3e; font: 22px/1.5 Georgia, serif; }
+.proposal-loading a { color: inherit; font-size: 14px; }
+.proposal-retry { display: flex; align-items: center; gap: 8px; padding: 12px 18px; border: 1px solid #fff1c966; border-radius: 5px; color: inherit; background: transparent; font-size: 16px; cursor: pointer; }
+.proposal-spinner { animation: proposal-spin 1s linear infinite; }
+@keyframes proposal-spin { to { transform: rotate(360deg); } }
+@media (orientation: landscape) {
+  .proposal-house { left: 65%; top: 22%; width: 29%; height: 42%; }
+  .proposal-tulip { left: 45%; top: 60%; width: 18%; height: 34%; }
+  .proposal-flowers { width: 9%; height: 15%; }
+  .proposal-flowers-0 { left: 1%; top: 76%; }
+  .proposal-flowers-1 { left: 9%; top: 81%; }
+  .proposal-flowers-2 { left: 0%; top: 85%; }
+  .proposal-flowers-3 { left: 87%; top: 79%; }
+  .proposal-prompt { bottom: 10px; left: 31%; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .proposal-spinner { animation: none; } }
+
+@font-face {
+  font-family: "Garden Caveat";
+  src: url("/proposal/fonts/Caveat.ttf") format("truetype");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+.proposal-control {
+  border-radius: 5px 3px 6px 2px;
+  border: 1px solid #c2a477;
+  background: repeating-linear-gradient(5deg, transparent 0 7px, #231c1824 8px, transparent 9px 12px), #4c5140;
+  box-shadow: inset 0 1px #e6d6a635, 0 3px 0 #222f2b, 0 5px 10px #071c2840;
+  backdrop-filter: none;
+  rotate: 0deg;
+}
+.proposal-control:hover, .proposal-control:active { border-color: #e2c58c; }
+.proposal-prompt {
+  padding: 8px 20px 10px; border: 1px solid #af9563; border-bottom: 3px solid #263729;
+  border-radius: 3px 7px 4px 2px;
+  background: repeating-linear-gradient(2deg, transparent 0 6px, #132c2b2b 7px, transparent 8px 12px), #47553e;
+  box-shadow: inset 0 1px #dbc39260, 0 4px 9px #071f2940;
+  font: 600 23px/1.2 "Garden Caveat", cursive;
+  color: #fff1c9; text-shadow: 0 1px #243528;
+}
+.proposal-prompt::before, .proposal-prompt::after { content: ''; position: absolute; top: 50%; width: 3px; height: 3px; background: #b9ac89; border-radius: 50%; box-shadow: 0 1px #142b23; }
+.proposal-prompt::before { left: 7px; }
+.proposal-prompt::after { right: 7px; }
+.proposal-garden .album-overlay { perspective: 1200px; }
+.proposal-garden .album-book {
+  transform-origin: 10% 50%; animation: proposal-book-open .65s ease-out both;
+  background-color: #faf6e8;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath opacity='.055' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+}
+.proposal-garden .album-header h2, .proposal-garden .album-writing h3, .proposal-garden .album-empty h3 { font: 600 30px/1.2 "Garden Caveat", cursive; }
+.proposal-garden .album-writing p { font-family: "Garden Caveat", cursive; font-size: 24px; line-height: 32px; }
+.proposal-garden .album-field input, .proposal-garden .album-field textarea { font: 24px/1.4 "Garden Caveat", cursive; }
+.proposal-garden .album-page { transform-origin: left center; animation: proposal-page-turn .45s ease-out both; }
+@keyframes proposal-book-open { from { rotate: y -13deg; } to { rotate: y 0deg; } }
+@keyframes proposal-page-turn { from { opacity: .2; rotate: y -9deg; } to { opacity: 1; rotate: y 0deg; } }
+@media (orientation: landscape) and (max-height: 560px) {
+  .proposal-prompt { font-size: 20px; padding-block: 5px; }
+  .proposal-garden .album-header h2 { font-size: 26px; }
+}
+@media (max-width: 350px) { .proposal-prompt { font-size: 21px; } }
+@media (prefers-reduced-motion: reduce) {
+  .proposal-garden .album-book, .proposal-garden .album-page { animation: none !important; }
+}
